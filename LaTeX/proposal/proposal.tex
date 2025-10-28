@@ -1,0 +1,123 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage[a4paper, margin=1.5cm]{geometry}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{url}
+\usepackage[numbers]{natbib}
+\usepackage{amsmath}
+
+
+\title{Label Swapping for Imbalanced Datasets - Images and Music}
+\author{
+    \begin{minipage}[t]{0.24\textwidth}
+        \centering
+        Matei Cananau \\
+        MSc Machine Learning \\
+        \href{mailto:cananau@kth.se}{cananau@kth.se}
+    \end{minipage}
+    \hfill
+        \begin{minipage}[t]{0.24\textwidth}
+        \centering
+        Alexander Själander \\
+        MSc Machine Learning \\
+        \href{mailto:alesja@kth.se}{alesja@kth.se}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.24\textwidth}
+        \centering
+        Gustaw Siedlarski \\
+        MSc Computer Science \\
+        \href{mailto:gustawsi@kth.se}{gustawsi@kth.se}
+    \end{minipage}
+    \hfill
+}
+
+\date{October 2025}
+
+
+
+\begin{document}
+
+\maketitle
+
+
+\section{Paper}
+We have chosen the topic of undersupervised learning, and are going to recreate the \textit{Learning imbalanced data with beneficial label noise} paper \cite{ben_labels}.
+
+Our plan is first to replicate the results of the paper, which is one of the suggested papers on canvas. Replicating this research will entail implementing and using both ResNet and the label noise swapping algorithm LNR. The dataset CIFAR-10 and/or CIFAR-100 will be used, just as in the original paper.
+
+We will then proceed to extend the strategy of label swapping to time signature detection in music audio files. A paper from 2024 uses a ResNet-18 to do SOTA time signature detection, which we will try to replicate and take inspiration from \cite{timesig_resnet18}. This paper is very fitting to test the limits of LNR as the dataset used, \textit{Meter2800}, is very imbalanced; time signatures of 3/4 and 4/4 are common, while 5/4 and 7/4 are rare \cite{meter2800}. We will try to optimize the time signature detection Resnet-18 model by first recreating the results of the paper as a baseline, then using the aforementioned label noise strategy. We hope that this will produce new SOTA results for time signature detection.
+
+
+The paper evaluates its method by using F1-scores, G-mean, and area under curve (AUC). We intend to do the same using the following formulas, as written in the paper:
+
+$$
+\mathrm{F1} = \frac{2 \times \mathrm{Precision} \times \mathrm{Recall}}{\mathrm{Precision} + \mathrm{Recall}} 
+= \frac{2TP}{2TP + FP + FN}
+$$
+
+$$
+\mathrm{G\text{-}mean} = \sqrt{\frac{TP}{TP + FN} \times \frac{TN}{TN + FP}}
+$$
+
+$$
+\mathrm{AUC} = \int_{0}^{1} \mathrm{TPR}\bigl(\mathrm{FPR}^{-1}(t)\bigr)\, dt
+$$
+
+% 8. Metrics: F1-scores, G-mean, compare to naive baseline
+
+
+
+
+\section{Dataset}
+The Meter2800 is a time signature dataset provided by Harvard Dataverse. It contains four CSV files containing annotations of audio data segmented into the meter classes 3, 4, 5 and 7. Meters 3 and 4 are regular, while 5 and 7 are irregular. Meter2800 also contains a total of 2800 audio files of 30 seconds each.
+
+Paper \cite{timesig_resnet18} mentions that the dataset is imbalanced, which makes it a perfect candidate for what \cite{ben_labels} proposes.
+
+
+\section{Grading}
+The group is aiming for an \textbf{excellent grade}. We are focused on learning and trying out new things in a creative manner. The feedback we get can hopefully turn this project into something we can showcase in the future.
+
+\noindent We plan to structure our work according to the following milestones:
+
+\subsection{Satisfactory-level}
+Recreate the ResNet-32 results from \cite{ben_labels}. 
+
+\subsection{Good-Very Good-level}
+Investigate the impact on performance when using different undersampling ratios and when picking different classes to be undersampled.
+%Experiment with different ratios of undersampling ratios and pick different classes to undersample %(TEST HPARAMS)
+
+\subsection{Excellent-level}
+Apply the methodology of \cite{ben_labels} to the problem of classifying music spectograms according to time signatures. Following \cite{timesig_resnet18} this will be done using a ResNet model.
+
+It would be of interest to us to deploy the model to the cloud, letting users upload sound files and receive a predicted time signature, in case time allows.
+
+%Test the resnet model on music spectrograms, following \cite{timesig_resnet18}, in order to detect music time signatures. %(IMPLEMENT FOR TIME SIGNATURE CLASSIFICATION)
+
+\subsection{Grading motivation}
+We will be reproducing the results of not just one paper, but two. On top of this, LNR is a novel method that has not yet been applied to time signature detection, if even the field of Music Informatics as a whole. Extending LNR to a new domain and improving on its SOTA is worthy of grade A, in our opinion.
+
+
+\section{Computational resources}
+We plan to run the experiments locally on our own GPUs. If the computational power turns out to be lacking, we will reduce the model size from ResNet32 to ResNet18, and/or use the Google Cloud resources provided by the course.
+
+\section{Software packages}
+We initially plan to use PyTorch and ResNet-18/32 models.
+
+\section{Members}
+The three members have different skills, interests, and goals that will benefit the project.
+
+\subsection{Alexander}
+I have experience in ML, deep learning, music informatics, working with audio and music features, and working with several deep learning architectures in PyTorch. My aim is to practice optimizing classifiers, and especially audio classifiers, as well as getting to know LNR, since it seems like a very useful technique in a lot of training regimes.
+
+\subsection{Gustaw}
+I have experience in machine learning and deep learning, working with different architectures in PyTorch and NumPy. My goal is to gain more familiarity with implementing novel methods to new datasets, and train my ability to translate research papers into usable, improved products.
+
+\subsection{Matei}
+I have experience with machine learning, signal processing, and MIR techniques, along with writing and web development. Therefore, I hope to create a functioning model and perhaps even deploy it in order to allow users to access it via a webapp.
+
+
+\bibliographystyle{unsrtnat}
+\bibliography{references}
+
+\end{document}

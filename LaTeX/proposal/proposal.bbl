@@ -1,0 +1,27 @@
+\begin{thebibliography}{3}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Hu et~al.(2025)Hu, Liu, Gong, Wang, and Peng]{ben_labels}
+Guangzheng Hu, Feng Liu, Mingming Gong, Guanghui Wang, and Liuhua Peng.
+\newblock Learning imbalanced data with beneficial label noise.
+\newblock In \emph{Forty-second International Conference on Machine Learning}, 2025.
+\newblock URL \url{https://openreview.net/forum?id=AZT4EiONRQ}.
+
+\bibitem[Abimbola et~al.(2024)Abimbola, Kostrzewa, and Kasprowski]{timesig_resnet18}
+Jeremiah Abimbola, Daniel Kostrzewa, and Pawe{\l} Kasprowski.
+\newblock Music time signature detection using resnet18.
+\newblock \emph{EURASIP journal on audio, speech, and music processing}, 2024\penalty0 (1):\penalty0 30--10, 2024.
+\newblock ISSN 1687-4722.
+\newblock URL \url{https://link.springer.com/article/10.1186/s13636-024-00346-6}.
+
+\bibitem[Abimbola et~al.(2023)Abimbola, Kostrzewa, and Kasprowski]{meter2800}
+Jeremiah Abimbola, Daniel Kostrzewa, and Pawe{\l} Kasprowski.
+\newblock Meter2800: A novel dataset for music time signature detection.
+\newblock \emph{Data in Brief}, 51:\penalty0 109736, 2023.
+\newblock URL \url{https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/0CLXBQ}.
+
+\end{thebibliography}
