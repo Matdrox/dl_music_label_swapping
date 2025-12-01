@@ -1,0 +1,10 @@
+appended text___
+___
+___
+Architecture: CART
+Resampling method: CC
+Dataset: abalone-17_vs_7-8-9-10
+Best F1-score: 0.2633319970397399
+Best k: 1
+Best gamma: 0.02543859649122807
+___
