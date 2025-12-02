@@ -8,12 +8,7 @@ import pprint
 
 import torch
 import torch.nn as nn
-import torch.nn.parallel
-import torch.distributed as dist
-import torch.optim
 import torch.multiprocessing as mp
-import torch.utils.data
-import torch.utils.data.distributed
 import torch.nn.functional as F
 
 from datasets.cifar10 import CIFAR10_LT
@@ -74,41 +69,19 @@ def main():
         warnings.warn('You have chosen a specific GPU. This will completely '
                       'disable data parallelism.')
 
-    if config.dist_url == "env://" and config.world_size == -1:
-        config.world_size = int(os.environ["WORLD_SIZE"])
-
-    config.distributed = config.world_size > 1 or config.multiprocessing_distributed
-
     ngpus_per_node = torch.cuda.device_count()
-    if config.multiprocessing_distributed:
-        # Since we have ngpus_per_node processes per node, the total world_size
-        # needs to be adjusted accordingly
-        config.world_size = ngpus_per_node * config.world_size
-        # Use torch.multiprocessing.spawn to launch distributed processes: the
-        # main_worker process function
-        mp.spawn(main_worker, nprocs=ngpus_per_node, args=(ngpus_per_node, config, logger))
-    else:
-        # Simply call main_worker function
-        main_worker(config.gpu, ngpus_per_node, config, logger, model_dir)
+    # Simply call main_worker function
+    main_worker(config.gpu, ngpus_per_node, config, logger, model_dir)
 
 
 def main_worker(gpu, ngpus_per_node, config, logger, model_dir):
     global best_acc1
+    best_acc1 = torch.Tensor([best_acc1])
     config.gpu = gpu
 #     start_time = time.strftime("%Y%m%d_%H%M%S", time.localtime())
 
     if config.gpu is not None:
         logger.info("Use GPU: {} for training".format(config.gpu))
-
-    if config.distributed:
-        if config.dist_url == "env://" and config.rank == -1:
-            config.rank = int(os.environ["RANK"])
-        if config.multiprocessing_distributed:
-            # For multiprocessing distributed training, rank needs to be the
-            # global rank among all the processes
-            config.rank = config.rank * ngpus_per_node + gpu
-        dist.init_process_group(backend=config.dist_backend, init_method=config.dist_url,
-                                world_size=config.world_size, rank=config.rank)
 
     if config.dataset == 'cifar10' or config.dataset == 'cifar100':
         model = getattr(resnet_cifar, config.backbone)()
@@ -129,39 +102,7 @@ def main_worker(gpu, ngpus_per_node, config, logger, model_dir):
 
     if not torch.cuda.is_available():
         logger.info('using CPU, this will be slow')
-    elif config.distributed:
-        # For multiprocessing distributed, DistributedDataParallel constructor
-        # should always set the single device scope, otherwise,
-        # DistributedDataParallel will use all available devices.
-        if config.gpu is not None:
-            torch.cuda.set_device(config.gpu)
-            model.cuda(config.gpu)
-            classifier.cuda(config.gpu)
-            lws_model.cuda(config.gpu)
-            # When using a single GPU per process and per
-            # DistributedDataParallel, we need to divide the batch size
-            # ourselves based on the total number of GPUs we have
-            config.batch_size = int(config.batch_size / ngpus_per_node)
-            config.workers = int((config.workers + ngpus_per_node - 1) / ngpus_per_node)
-            model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[config.gpu])
-            classifier = torch.nn.parallel.DistributedDataParallel(classifier, device_ids=[config.gpu])
-            lws_model = torch.nn.parallel.DistributedDataParallel(lws_model, device_ids=[config.gpu])
-
-            if config.dataset == 'places':
-                block.cuda(config.gpu)
-                block = torch.nn.parallel.DistributedDataParallel(block, device_ids=[config.gpu])
-        else:
-            model.cuda()
-            classifier.cuda()
-            lws_model.cuda()
-            # DistributedDataParallel will divide and allocate batch_size to all
-            # available GPUs if device_ids are not set
-            model = torch.nn.parallel.DistributedDataParallel(model)
-            classifier = torch.nn.parallel.DistributedDataParallel(classifier)
-            lws_model = torch.nn.parallel.DistributedDataParallel(lws_model)
-            if config.dataset == 'places':
-                block.cuda()
-                block = torch.nn.parallel.DistributedDataParallel(block)
+    
 
     elif config.gpu is not None:
         torch.cuda.set_device(config.gpu)
@@ -187,7 +128,7 @@ def main_worker(gpu, ngpus_per_node, config, logger, model_dir):
             else:
                 # Map model to be loaded to specified single gpu.
                 loc = 'cuda:{}'.format(config.gpu)
-                checkpoint = torch.load(config.resume, map_location=loc)
+                checkpoint = torch.load(config.resume, map_location=loc, weights_only=config.weights_only_model)
             if config.gpu is not None:
                 # best_acc1 may be from a checkpoint from a different GPU
                 best_acc1 = best_acc1.to(config.gpu)
@@ -205,7 +146,7 @@ def main_worker(gpu, ngpus_per_node, config, logger, model_dir):
     # Data loading code
     if config.dataset == 'cifar10':
         dataset = CIFAR10_LT(config.distributed, root=config.data_path, imb_factor=config.imb_factor,
-                             batch_size=config.batch_size, num_works=config.workers)
+                             batch_size=config.batch_size, num_works=config.workers, config=config)
 
     elif config.dataset == 'cifar100':
         dataset = CIFAR100_LT(config.distributed, root=config.data_path, imb_factor=config.imb_factor,
