@@ -1,3 +1,4 @@
+# Based on cifar10_imb001_stage2_mislas.yaml
 name: train_cifar10_imb001_stage2_mislas
 uid: train_0
 print_freq: 40
@@ -11,9 +12,10 @@ dataset: 'cifar10'
 data_path: ''
 num_classes: 10
 imb_factor: 0.01
+# Added valsize_factor
+valsize_factor: 0.01
 backbone: 'resnet32_fe'
 resume: './cifar10_imb001_stage1_mixup10.pth.tar'
-noisemodel: 'cifar10_imb001_stage2_mislas.pth.tar'
 head_class_idx:
   - 0
   - 3
@@ -27,13 +29,7 @@ tail_class_idx:
 
 # distributed training
 deterministic: False
-distributed: False
 gpu: 0
-world_size: -1
-rank: -1
-dist_url: 'tcp://224.66.41.62:23456'
-dist_backend: 'nccl'
-multiprocessing_distributed: False
 
 
 
