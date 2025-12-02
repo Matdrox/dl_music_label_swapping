@@ -49,6 +49,10 @@ _C.alpha = 1.0
 _C.valsize_factor = 1.0
 _C.valbalance = 1.0
 
+# Additional params to fix torch version diffs
+_C.weights_only_model = False
+_C.state_dict_from_old_version = True
+
 def update_config(cfg, args):
     cfg.defrost()
     

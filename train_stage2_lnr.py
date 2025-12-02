@@ -192,7 +192,7 @@ def main_worker(gpu, ngpus_per_node, config, logger, model_dir):
             else:
                 # Map model to be loaded to specified single gpu.
                 loc = 'cuda:{}'.format(config.gpu)
-                checkpoint = torch.load(config.resume, map_location=loc)
+                checkpoint = torch.load(config.resume, map_location=loc, weights_only=config.weights_only_model)
             # config.start_epoch = checkpoint['epoch']
             print(checkpoint.keys())
             best_acc1 = checkpoint['best_acc1']
@@ -200,6 +200,26 @@ def main_worker(gpu, ngpus_per_node, config, logger, model_dir):
             if config.gpu is not None:
                 # best_acc1 may be from a checkpoint from a different GPU
                 best_acc1 = best_acc1.to(config.gpu)
+
+            # Rename state dict due to torch version diffs
+            if config.state_dict_from_old_version:
+                renamed_state_dict = {}
+                for key in checkpoint['state_dict_model'].keys():
+                    new_key = key.replace("module.", "")
+                    renamed_state_dict[new_key] = checkpoint['state_dict_model'][key]
+                checkpoint['state_dict_model'] = renamed_state_dict
+
+                renamed_state_dict_cls = {}
+                for key in checkpoint['state_dict_classifier'].keys():
+                    new_key = key.replace("module.", "")
+                    renamed_state_dict_cls[new_key] = checkpoint['state_dict_classifier'][key]
+                checkpoint['state_dict_classifier'] = renamed_state_dict_cls
+
+                renamed_state_dict_lws = {}
+                for key in checkpoint['state_dict_lws_model'].keys():
+                    new_key = key.replace("module.", "")
+                    renamed_state_dict_lws[new_key] = checkpoint['state_dict_lws_model'][key]
+                checkpoint['state_dict_lws_model'] = renamed_state_dict_lws
             model.load_state_dict(checkpoint['state_dict_model'])
             classifier.load_state_dict(checkpoint['state_dict_classifier'])
             lws_model.load_state_dict(checkpoint['state_dict_lws_model'])
@@ -210,24 +230,10 @@ def main_worker(gpu, ngpus_per_node, config, logger, model_dir):
         else:
             logger.info("=> no checkpoint found at '{}'".format(config.resume))
 
-        if os.path.isfile(config.noisemodel):
-            logger.info("=> loading checkpoint '{}'".format(config.noisemodel))
-            if config.gpu is None:
-                checkpoint = torch.load(config.noisemodel)
-            else:
-                loc = 'cuda:{}'.format(config.gpu)
-                checkpoint = torch.load(config.noisemodel, map_location=loc)
-            model_n = copy.deepcopy(model)
-            classifier_n = copy.deepcopy(classifier)
-            lws_model_n = copy.deepcopy(lws_model)
-            model_n.load_state_dict(checkpoint['state_dict_model'])
-            classifier_n.load_state_dict(checkpoint['state_dict_classifier'])
-            lws_model_n.load_state_dict(checkpoint['state_dict_lws_model'])
-
     # Data loading code
     if config.dataset == 'cifar10':
         dataset = CIFAR10_LT(config.distributed, root=config.data_path, imb_factor=config.imb_factor,
-                             batch_size=config.batch_size, num_works=config.workers)
+                             batch_size=config.batch_size, num_works=config.workers, config=config)
 
     elif config.dataset == 'cifar100':
         dataset = CIFAR100_LT(config.distributed, root=config.data_path, imb_factor=config.imb_factor,
@@ -274,7 +280,7 @@ def main_worker(gpu, ngpus_per_node, config, logger, model_dir):
         if config.dataset != 'places':
             block = None
         # train for one epoch
-        train_lnr(train_loader,train_loader_all, model, classifier, lws_model, criterion, optimizer, epoch, config, logger,model_n,classifier_n,lws_model_n, block, is_best, cls_num_list)
+        train_lnr(train_loader,train_loader_all, model, classifier, lws_model, criterion, optimizer, epoch, config, logger, block, is_best, cls_num_list)
 
         # evaluate on validation set
         acc1, ece = validate(val_loader, model, classifier, lws_model, criterion, config, logger, block)
@@ -404,7 +410,7 @@ def label_noise_rebalance(train_dataloader,net,classifier, unique_id, args, thre
     print('after rebalancing:', label_cnt)
     return noise_info
 
-def train_lnr(train_loader,train_loader_all, model, classifier, lws_model, criterion, optimizer, epoch, config, logger,model_n,classifier_n,lws_model_n, block=None, is_best = 0, cls_num_list = None):
+def train_lnr(train_loader,train_loader_all, model, classifier, lws_model, criterion, optimizer, epoch, config, logger, block=None, is_best = 0, cls_num_list = None):
     batch_time = AverageMeter('Time', ':6.3f')
     data_time = AverageMeter('Data', ':6.3f')
     losses = AverageMeter('Loss', ':.3f')
