@@ -1,5 +1,5 @@
 # Based on cifar10_imb001_stage2_mislas.yaml
-name: train_cifar10_imb001_stage2_mislas
+name: train_cifar10_imb001_stage2_lnr
 uid: train_0
 print_freq: 40
 workers: 0
