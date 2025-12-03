@@ -10,12 +10,8 @@ import math
 import copy
 import torch
 import torch.nn as nn
-import torch.nn.parallel
 import torch.distributed as dist
-import torch.optim
 import torch.multiprocessing as mp
-import torch.utils.data
-import torch.utils.data.distributed
 import torch.nn.functional as F
 
 from datasets.cifar10 import CIFAR10_LT
@@ -101,22 +97,10 @@ def main():
         warnings.warn('You have chosen a specific GPU. This will completely '
                       'disable data parallelism.')
 
-    if config.dist_url == "env://" and config.world_size == -1:
-        config.world_size = int(os.environ["WORLD_SIZE"])
-
-    config.distributed = config.world_size > 1 or config.multiprocessing_distributed
-
     ngpus_per_node = torch.cuda.device_count()
-    if config.multiprocessing_distributed:
-        # Since we have ngpus_per_node processes per node, the total world_size
-        # needs to be adjusted accordingly
-        config.world_size = ngpus_per_node * config.world_size
-        # Use torch.multiprocessing.spawn to launch distributed processes: the
-        # main_worker process function
-        mp.spawn(main_worker, nprocs=ngpus_per_node, args=(ngpus_per_node, config, logger))
-    else:
-        # Simply call main_worker function
-        main_worker(config.gpu, ngpus_per_node, config, logger, model_dir)
+    
+    # Simply call main_worker function
+    main_worker(config.gpu, ngpus_per_node, config, logger, model_dir)
 
 
 def main_worker(gpu, ngpus_per_node, config, logger, model_dir):
@@ -126,16 +110,6 @@ def main_worker(gpu, ngpus_per_node, config, logger, model_dir):
 
     if config.gpu is not None:
         logger.info("Use GPU: {} for training".format(config.gpu))
-
-    if config.distributed:
-        if config.dist_url == "env://" and config.rank == -1:
-            config.rank = int(os.environ["RANK"])
-        if config.multiprocessing_distributed:
-            # For multiprocessing distributed training, rank needs to be the
-            # global rank among all the processes
-            config.rank = config.rank * ngpus_per_node + gpu
-        dist.init_process_group(backend=config.dist_backend, init_method=config.dist_url,
-                                world_size=config.world_size, rank=config.rank)
 
     if config.dataset == 'cifar10' or config.dataset == 'cifar100':
         model = getattr(resnet_cifar, config.backbone)()
@@ -155,40 +129,7 @@ def main_worker(gpu, ngpus_per_node, config, logger, model_dir):
 
     if not torch.cuda.is_available():
         logger.info('using CPU, this will be slow')
-    elif config.distributed:
-        # For multiprocessing distributed, DistributedDataParallel constructor
-        # should always set the single device scope, otherwise,
-        # DistributedDataParallel will use all available devices.
-        if config.gpu is not None:
-            torch.cuda.set_device(config.gpu)
-            model.cuda(config.gpu)
-            classifier.cuda(config.gpu)
-            lws_model.cuda(config.gpu)
-            # When using a single GPU per process and per
-            # DistributedDataParallel, we need to divide the batch size
-            # ourselves based on the total number of GPUs we have
-            config.batch_size = int(config.batch_size / ngpus_per_node)
-            config.workers = int((config.workers + ngpus_per_node - 1) / ngpus_per_node)
-            model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[config.gpu])
-            classifier = torch.nn.parallel.DistributedDataParallel(classifier, device_ids=[config.gpu])
-            lws_model = torch.nn.parallel.DistributedDataParallel(lws_model, device_ids=[config.gpu])
-
-            if config.dataset == 'places':
-                block.cuda(config.gpu)
-                block = torch.nn.parallel.DistributedDataParallel(block, device_ids=[config.gpu])
-        else:
-            model.cuda()
-            classifier.cuda()
-            lws_model.cuda()
-            # DistributedDataParallel will divide and allocate batch_size to all
-            # available GPUs if device_ids are not set
-            model = torch.nn.parallel.DistributedDataParallel(model)
-            classifier = torch.nn.parallel.DistributedDataParallel(classifier)
-            lws_model = torch.nn.parallel.DistributedDataParallel(lws_model)
-            if config.dataset == 'places':
-                block.cuda()
-                block = torch.nn.parallel.DistributedDataParallel(block)
-
+    
     elif config.gpu is not None:
         torch.cuda.set_device(config.gpu)
         model = model.cuda(config.gpu)
@@ -214,7 +155,7 @@ def main_worker(gpu, ngpus_per_node, config, logger, model_dir):
             else:
                 # Map model to be loaded to specified single gpu.
                 loc = 'cuda:{}'.format(config.gpu)
-                checkpoint = torch.load(config.resume, map_location=loc)
+                checkpoint = torch.load(config.resume, map_location=loc, weights_only=config.weights_only_model)
             # config.start_epoch = checkpoint['epoch']
             print(checkpoint.keys())
             best_acc1 = checkpoint['best_acc1']
@@ -222,6 +163,26 @@ def main_worker(gpu, ngpus_per_node, config, logger, model_dir):
             if config.gpu is not None:
                 # best_acc1 may be from a checkpoint from a different GPU
                 best_acc1 = best_acc1.to(config.gpu)
+
+            # Rename state dict due to torch version diffs
+            if config.state_dict_from_old_version:
+                renamed_state_dict = {}
+                for key in checkpoint['state_dict_model'].keys():
+                    new_key = key.replace("module.", "")
+                    renamed_state_dict[new_key] = checkpoint['state_dict_model'][key]
+                checkpoint['state_dict_model'] = renamed_state_dict
+
+                renamed_state_dict_cls = {}
+                for key in checkpoint['state_dict_classifier'].keys():
+                    new_key = key.replace("module.", "")
+                    renamed_state_dict_cls[new_key] = checkpoint['state_dict_classifier'][key]
+                checkpoint['state_dict_classifier'] = renamed_state_dict_cls
+
+                renamed_state_dict_lws = {}
+                for key in checkpoint['state_dict_lws_model'].keys():
+                    new_key = key.replace("module.", "")
+                    renamed_state_dict_lws[new_key] = checkpoint['state_dict_lws_model'][key]
+                checkpoint['state_dict_lws_model'] = renamed_state_dict_lws
             model.load_state_dict(checkpoint['state_dict_model'])
             classifier.load_state_dict(checkpoint['state_dict_classifier'])
             lws_model.load_state_dict(checkpoint['state_dict_lws_model'])
@@ -231,20 +192,6 @@ def main_worker(gpu, ngpus_per_node, config, logger, model_dir):
                         .format(config.resume, checkpoint['epoch']))
         else:
             logger.info("=> no checkpoint found at '{}'".format(config.resume))
-
-        if os.path.isfile(config.noisemodel):
-            logger.info("=> loading checkpoint '{}'".format(config.noisemodel))
-            if config.gpu is None:
-                checkpoint = torch.load(config.noisemodel)
-            else:
-                loc = 'cuda:{}'.format(config.gpu)
-                checkpoint = torch.load(config.noisemodel, map_location=loc)
-            model_n = copy.deepcopy(model)
-            classifier_n = copy.deepcopy(classifier)
-            lws_model_n = copy.deepcopy(lws_model)
-            model_n.load_state_dict(checkpoint['state_dict_model'])
-            classifier_n.load_state_dict(checkpoint['state_dict_classifier'])
-            lws_model_n.load_state_dict(checkpoint['state_dict_lws_model'])
 
     # Data loading code
     if config.dataset == 'cifar10':
@@ -301,7 +248,7 @@ def main_worker(gpu, ngpus_per_node, config, logger, model_dir):
         if config.dataset != 'places':
             block = None
         # train for one epoch
-        selm = train(train_loader,train_loader_all, train_dataset, model, classifier, lws_model, criterion, optimizer, epoch, config, logger,model_n,classifier_n,lws_model_n, block, is_best, cls_num_list, selm = selm, sel_val = sel_val)
+        selm = train(train_loader,train_loader_all, train_dataset, model, classifier, lws_model, criterion, optimizer, epoch, config, logger, block, is_best, cls_num_list, selm = selm, sel_val = sel_val)
 
         # evaluate on validation set
         acc1, ece = validate(val_loader, model, classifier, lws_model, criterion, config, logger, block)
@@ -367,7 +314,8 @@ def selval(model, classifier, lws_model, val_data, objective_name, gpu, lb_datas
     val_loader = get_data_loader(val_data, batch_size= 256)
     
     labels, preds, features = feedforward(model, classifier, lws_model, val_loader, gpu, return_feats=True)
-    prototypes = np.zeros((para.num_classes, classifier.module.fc.in_features))
+    # prototypes = np.zeros((para.num_classes, classifier.module.fc.in_features))
+    prototypes = np.zeros((para.num_classes, classifier.fc.in_features))
     features = np.array(features)
     for class_label in range(para.num_classes):
         feats_for_class = features[labels == class_label]
@@ -418,7 +366,7 @@ def selval(model, classifier, lws_model, val_data, objective_name, gpu, lb_datas
     print(" val Acc:", para.cit, "is : ", val_metrics["val/mean_recall"])
     return val_metrics, para
 
-def train(train_loader,train_loader_all, train_dataset, model, classifier, lws_model, criterion, optimizer, epoch, config, logger,model_n,classifier_n,lws_model_n, block=None, is_best = 0, cls_num_list = None, selm = None, sel_val = None):
+def train(train_loader,train_loader_all, train_dataset, model, classifier, lws_model, criterion, optimizer, epoch, config, logger, block=None, is_best = 0, cls_num_list = None, selm = None, sel_val = None):
     batch_time = AverageMeter('Time', ':6.3f')
     data_time = AverageMeter('Data', ':6.3f')
     losses = AverageMeter('Loss', ':.3f')
