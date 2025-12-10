@@ -1,14 +1,14 @@
 # Fdb version 4
-["bibtex proposal"] 1761643172.98292 "proposal.aux" "proposal.bbl" "proposal" 1761643173.46697 0
-  "./references.bib" 1761302087.20666 1392 95825d880aeaefa26859fcadedbd729c ""
+["bibtex proposal"] 1764153819.93826 "proposal.aux" "proposal.bbl" "proposal" 1764153820.60408 0
+  "./references.bib" 1761644309.70364 1392 95825d880aeaefa26859fcadedbd729c ""
   "/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/bibtex/bst/natbib/unsrtnat.bst" 1741388039 24550 a41a6405f4de768c43e871d9fbce2bc8 ""
-  "proposal.aux" 1761643173.34871 2147 030a6ebb2152bd882bb04aef3c5c09cf "pdflatex"
+  "proposal.aux" 1764153820.48587 2147 030a6ebb2152bd882bb04aef3c5c09cf "pdflatex"
   (generated)
   "proposal.bbl"
   "proposal.blg"
   (rewritten before read)
-["pdflatex"] 1761643173.03615 "/Users/mateicananau/Projects/KTH/Deep_Learning_Advanced/Final_project/LaTeX/proposal/proposal.tex" "proposal.pdf" "proposal" 1761643173.46706 0
-  "/Users/mateicananau/Projects/KTH/Deep_Learning_Advanced/Final_project/LaTeX/proposal/proposal.tex" 1761643172.26294 6280 b803c03d7b9c4e703a38a12119e9e8aa ""
+["pdflatex"] 1764153820.17259 "/Users/mateicananau/Projects/KTH/Deep_Learning_Advanced/Final_project/LaTeX/proposal/proposal.tex" "proposal.pdf" "proposal" 1764153820.60418 0
+  "/Users/mateicananau/Projects/KTH/Deep_Learning_Advanced/Final_project/LaTeX/proposal/proposal.tex" 1764153819.22601 6280 b803c03d7b9c4e703a38a12119e9e8aa ""
   "/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/map/fontname/texfonts.map" 1741388039 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/map/pdftex/updmap/pdftex.map" 1741388039 5466553 2748998d7db8078826afa1f272036265 ""
   "/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1741388039 1004 54797486969f23fa377b128694d548df ""
@@ -94,10 +94,10 @@
   "/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/tex/latex/url/url.sty" 1741388039 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/web2c/texmf.cnf" 1741388039 42151 79f67285bdd95beca4d137b380b4b9e5 ""
   "/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-var/web2c/pdftex/pdflatex.fmt" 1741388039 3346141 1288109d02d1c772df65535881471649 ""
-  "proposal.aux" 1761643173.34871 2147 030a6ebb2152bd882bb04aef3c5c09cf "pdflatex"
-  "proposal.bbl" 1761643173.0348 1430 5e869ac68d96a56011103acd99575b98 "bibtex proposal"
-  "proposal.out" 1761643173.34907 1458 25cb70a1a2186d317ae75684e45eb179 "pdflatex"
-  "proposal.tex" 1761643172.26294 6280 b803c03d7b9c4e703a38a12119e9e8aa ""
+  "proposal.aux" 1764153820.48587 2147 030a6ebb2152bd882bb04aef3c5c09cf "pdflatex"
+  "proposal.bbl" 1764153820.17095 1430 5e869ac68d96a56011103acd99575b98 "bibtex proposal"
+  "proposal.out" 1764153820.48635 1458 25cb70a1a2186d317ae75684e45eb179 "pdflatex"
+  "proposal.tex" 1764153819.22601 6280 b803c03d7b9c4e703a38a12119e9e8aa ""
   (generated)
   "proposal.aux"
   "proposal.log"
