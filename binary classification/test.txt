@@ -136,3 +136,131 @@ Best F1-score: 0.5234639499301273
 Best k: 1
 Best gamma: 0.49054937290231404
 ___
+___
+Architecture: CART
+Resampling method: smote
+Dataset: abalone-17_vs_7-8-9-10
+Best F1-score: 0.3179781930600242
+Best k: 20.0
+Best gamma: 0.02543859649122807
+___
+___
+Architecture: CART
+Resampling method: smote
+Dataset: ecoli1
+Best F1-score: 0.7751308317173303
+Best k: 10.5
+Best gamma: 0.5315315315315315
+___
+___
+Architecture: CART
+Resampling method: smote
+Dataset: glass0
+Best F1-score: 0.7275406943872693
+Best k: 20.0
+Best gamma: 0.48611111111111116
+___
+___
+Architecture: CART
+Resampling method: smote
+Dataset: vehicle1
+Best F1-score: 0.5615247469804381
+Best k: 20.0
+Best gamma: 0.8544426779720897
+___
+___
+Architecture: mlp
+Resampling method: smote
+Dataset: abalone-17_vs_7-8-9-10
+Best F1-score: 0.426201679510503
+Best k: 1.0
+Best gamma: 0.13372319688109163
+___
+___
+Architecture: mlp
+Resampling method: smote
+Dataset: ecoli1
+Best F1-score: 0.7812934140036262
+Best k: 10.5
+Best gamma: 0.37537537537537535
+___
+___
+Architecture: mlp
+Resampling method: smote
+Dataset: glass0
+Best F1-score: 0.3927945293854485
+Best k: 10.5
+Best gamma: 1.0
+___
+___
+Architecture: mlp
+Resampling method: smote
+Dataset: vehicle1
+Best F1-score: 0.46360802217339625
+Best k: 20.0
+Best gamma: 1.0
+___
+___
+Architecture: CART
+Resampling method: CC
+Dataset: abalone-17_vs_7-8-9-10
+Best F1-score: 0.2980619249547029
+Best k: 1
+Best gamma: 0.02543859649122807
+___
+___
+Architecture: CART
+Resampling method: CC
+Dataset: ecoli1
+Best F1-score: 0.7574066080659957
+Best k: 1
+Best gamma: 0.6876876876876876
+___
+___
+Architecture: CART
+Resampling method: CC
+Dataset: glass0
+Best F1-score: 0.7196357891404331
+Best k: 1
+Best gamma: 0.48611111111111116
+___
+___
+Architecture: CART
+Resampling method: CC
+Dataset: vehicle1
+Best F1-score: 0.5278838656456467
+Best k: 1
+Best gamma: 0.6361066949302243
+___
+___
+Architecture: mlp
+Resampling method: CC
+Dataset: abalone-17_vs_7-8-9-10
+Best F1-score: 0.3203257376638505
+Best k: 1
+Best gamma: 0.35029239766081877
+___
+___
+Architecture: mlp
+Resampling method: CC
+Dataset: ecoli1
+Best F1-score: 0.7613950236773858
+Best k: 1
+Best gamma: 0.7657657657657657
+___
+___
+Architecture: mlp
+Resampling method: CC
+Dataset: glass0
+Best F1-score: 0.4119073643327375
+Best k: 1
+Best gamma: 1.0
+___
+___
+Architecture: mlp
+Resampling method: CC
+Dataset: vehicle1
+Best F1-score: 0.4045675518216434
+Best k: 1
+Best gamma: 1.0
+___
