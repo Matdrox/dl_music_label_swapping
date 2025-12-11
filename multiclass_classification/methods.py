@@ -29,6 +29,8 @@ def mixup_criterion(criterion, pred, y_a, y_b, lam, n = None):
     #print(n,y_a,y_b)
     lam_y = []
     loss = 0
+    if n is None:
+        return lam * criterion(pred, y_a) + (1 - lam) * criterion(pred, y_b)
     for i, v in enumerate(y_a):
         if (n[y_a[i]] / n[y_b[i]]) >= 3 and lam < 0.5:
             lam_y.append(0)

@@ -193,7 +193,7 @@ def main_worker(gpu, ngpus_per_node, config, logger, model_dir):
     # Data loading code
     if config.dataset == 'cifar10':
         dataset = CIFAR10_LT(config.distributed, root=config.data_path, imb_factor=config.imb_factor,
-                             batch_size=config.batch_size, num_works=config.workers)
+                             batch_size=config.batch_size, num_works=config.workers, config=config)
 
     elif config.dataset == 'cifar100':
         dataset = CIFAR100_LT(config.distributed, root=config.data_path, imb_factor=config.imb_factor,
@@ -296,7 +296,7 @@ def train(train_loader, model, classifier, criterion, optimizer, epoch, config, 
     end_steps = int(training_data_num / train_loader.batch_size)
 
     end = time.time()
-    for i, (images, target) in enumerate(train_loader):
+    for i, (index, images, target) in enumerate(train_loader):
         if i > end_steps:
             break
 
