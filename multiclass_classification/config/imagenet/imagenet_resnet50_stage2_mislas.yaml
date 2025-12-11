@@ -1,0 +1,55 @@
+name: imagenet_resnet50_stage2_mislas
+print_freq: 10
+workers: 0
+log_dir: 'logs'
+model_dir: 'ckps'
+
+
+# dataset & model setting
+dataset: 'imagenet'
+data_path: './data/imagenet/'
+num_classes: 1000
+imb_factor: null
+backbone: 'resnet50_fe'
+resume: './imagenet_resnet50_stage1_mixup02.pth.tar'
+noisemodel: './imagenet_resnet50_stage2_mislas.pth.tar'
+head_class_idx:
+  - 0
+  - 390
+med_class_idx:
+  - 390
+  - 835
+tail_class_idx:
+  - 835
+  - 1000
+#conda activate MiSLAS
+#python .\train_stage2.py --cfg config\imagenet\imagenet_resnet50_stage2_mislas.yaml
+
+# distributed training
+deterministic: False
+distributed: False
+gpu: null
+world_size: -1
+rank: -1
+dist_url: 'tcp://224.66.41.62:23456'
+dist_backend: 'nccl'
+multiprocessing_distributed: False
+
+
+# Train
+mode: 'stage2'
+smooth_head: 0.3
+smooth_tail: 0.0
+shift_bn: True
+lr_factor: 0.05
+lr: 0.1
+batch_size: 256
+weight_decay: 5e-4
+num_epochs: 50
+momentum: 0.9
+mixup: True
+alpha: null
+
+
+
+
