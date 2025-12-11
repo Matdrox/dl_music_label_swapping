@@ -1,0 +1,53 @@
+# Based on cifar10_imb001_stage2_mislas.yaml
+name: train_cifar10_imb001_stage2_mislas
+uid: train_0
+print_freq: 40
+workers: 0
+log_dir: 'logs'
+model_dir: 'ckps'
+
+# dataset & model setting
+dataset: 'cifar10'
+# Path to top level cifar directory
+data_path: ''
+num_classes: 10
+imb_factor: 0.01
+# Added valsize_factor
+#valsize_factor: 0.01
+backbone: 'resnet32_fe'
+resume: './cifar10_imb001_stage1_mixup10.pth.tar'
+head_class_idx:
+  - 0
+  - 3
+med_class_idx:
+  - 3
+  - 7
+tail_class_idx:
+  - 7
+  - 10
+
+
+# distributed training
+deterministic: False
+gpu: 0
+
+
+
+# Train
+mode: 'stage2'
+smooth_head: 0.3
+smooth_tail: 0.0
+shift_bn: False
+lr_factor: 0.5
+lr: 0.01
+batch_size: 128
+weight_decay: 5e-4
+num_epochs: 100
+momentum: 0.9
+mixup: False
+alpha: null
+
+
+
+
+
