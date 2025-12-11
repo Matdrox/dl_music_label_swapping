@@ -10,17 +10,12 @@ import math
 import torch
 import torch.nn.functional as F
 
-from datasets.cifar10 import CIFAR10_LT
-from datasets.cifar100 import CIFAR100_LT
-from datasets.places import Places_LT
-from datasets.imagenet import ImageNet_LT
-from datasets.ina2018 import iNa2018
-
 from utils import config, update_config, create_logger
 from utils import AverageMeter, ProgressMeter
 from utils import accuracy, calibration
 
-from models import load_model
+from loading import load_data
+from loading import load_model
 
 from methods import mixup_data, mixup_criterion
 from methods import LabelAwareSmoothing
@@ -80,32 +75,8 @@ def main_worker(gpu, ngpus_per_node, config, logger, model_dir):
     config.gpu = gpu
     model, classifier, lws_model = load_model.load_model(gpu, config, logger)
 
-    # Data loading code
-    if config.dataset == 'cifar10':
-        dataset = CIFAR10_LT(config.distributed, root=config.data_path, imb_factor=config.imb_factor,
-                             batch_size=config.batch_size, num_works=config.workers, config=config)
-
-    elif config.dataset == 'cifar100':
-        dataset = CIFAR100_LT(config.distributed, root=config.data_path, imb_factor=config.imb_factor,
-                              batch_size=config.batch_size, num_works=config.workers)
-
-    elif config.dataset == 'places':
-        dataset = Places_LT(config.distributed, root=config.data_path,
-                            batch_size=config.batch_size, num_works=config.workers)
-
-    elif config.dataset == 'imagenet':
-        dataset = ImageNet_LT(config.distributed, root=config.data_path,
-                              batch_size=config.batch_size, num_works=config.workers)
-
-    elif config.dataset == 'ina2018':
-        dataset = iNa2018(config.distributed, root=config.data_path,
-                          batch_size=config.batch_size, num_works=config.workers)
-
-    train_loader = dataset.train_balance
-    train_loader_all = dataset.train_balance
-    val_loader = dataset.eval
-    cls_num_list = dataset.cls_num_list
-
+    
+    train_loader, train_loader_all, val_loader, cls_num_list = load_data.load_data(config)
     # define loss function (criterion) and optimizer
 
     criterion = LabelAwareSmoothing(cls_num_list=cls_num_list, smooth_head=config.smooth_head,

@@ -11,13 +11,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from datasets.cifar10 import CIFAR10_LT
-from datasets.cifar100 import CIFAR100_LT
-from datasets.places import Places_LT
-from datasets.imagenet import ImageNet_LT
-from datasets.ina2018 import iNa2018
-
-from models import load_model
+from loading import load_data
+from loading import load_model
 
 from utils import config, update_config, create_logger
 from utils import AverageMeter, ProgressMeter
@@ -105,35 +100,7 @@ def main_worker(gpu, ngpus_per_node, config, logger, model_dir):
 
 
     # Data loading code
-    if config.dataset == 'cifar10':
-        dataset = CIFAR10_LT(config.distributed, root=config.data_path, imb_factor=config.imb_factor,
-                             batch_size=config.batch_size, num_works=config.workers, config = config)
-
-    elif config.dataset == 'cifar100':
-        dataset = CIFAR100_LT(config.distributed, root=config.data_path, imb_factor=config.imb_factor,
-                              batch_size=config.batch_size, num_works=config.workers, config = config)
-
-    elif config.dataset == 'places':
-        dataset = Places_LT(config.distributed, root=config.data_path,
-                            batch_size=config.batch_size, num_works=config.workers)
-
-    elif config.dataset == 'imagenet':
-        dataset = ImageNet_LT(config.distributed, root=config.data_path,
-                              batch_size=config.batch_size, num_works=config.workers)
-
-    elif config.dataset == 'ina2018':
-        dataset = iNa2018(config.distributed, root=config.data_path,
-                          batch_size=config.batch_size, num_works=config.workers)
-
-    train_loader = dataset.train_balance
-    train_loader_all = dataset.train_balance
-    val_loader = dataset.eval
-    sel_val = dataset.val
-    print(sel_val.get_cls_num_list())
-    cls_num_list = dataset.cls_num_list
-    train_dataset = dataset.train_dataset
-    if config.distributed:
-        train_sampler = dataset.dist_sampler
+    train_loader, train_loader_all, val_loader, cls_num_list, sel_val, train_dataset = load_data.load_data(config, selmix=True)
 
     # define loss function (criterion) and optimizer
 
@@ -151,8 +118,6 @@ def main_worker(gpu, ngpus_per_node, config, logger, model_dir):
     selm.num_train_iter = config.num_epochs * 10000
     bepoch = 0
     for epoch in range(config.num_epochs):
-        if config.distributed:
-            train_sampler.set_epoch(epoch)
 
         adjust_learning_rate(optimizer, epoch, config)
 
