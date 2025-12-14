@@ -8,7 +8,7 @@ model_dir: 'ckps'
 dataset: 'cifar10'
 data_path: ''
 num_classes: 10
-imb_factor: 0.1
+imb_factor: 0.01
 backbone: 'resnet32_fe'
 resume: ''
 head_class_idx:
