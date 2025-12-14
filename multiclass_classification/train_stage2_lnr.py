@@ -410,14 +410,18 @@ def save_checkpoint(state, is_best, model_dir):
 
 def adjust_learning_rate(optimizer, epoch, config):
     """Sets the learning rate"""
-    lr_min = 0
-    lr_max = config.lr
-    lr = lr_min + 0.5 * (lr_max - lr_min) * (1 + math.cos(epoch / config.num_epochs * 3.1415926535))
-    for idx, param_group in enumerate(optimizer.param_groups):
-        if idx == 0:
-            param_group['lr'] = config.lr_factor * lr
-        else:
-            param_group['lr'] = 1.00 * lr
+    if not config.paper_lr:
+        lr_min = 0
+        lr_max = config.lr
+        lr = lr_min + 0.5 * (lr_max - lr_min) * (1 + math.cos(epoch / config.num_epochs * 3.1415926535))
+        for idx, param_group in enumerate(optimizer.param_groups):
+            if idx == 0:
+                param_group['lr'] = config.lr_factor * lr
+            else:
+                param_group['lr'] = 1.00 * lr
+    else:
+        for idx, param_group in enumerate(optimizer.param_groups):
+            param_group['lr'] = 0.0001
 
 
 if __name__ == '__main__':

@@ -59,6 +59,9 @@ _C.tflip = None
 # Additional parameter to toggle correct val/test split
 _C.valtestsplit = False
 
+# Additonal param to set learning rate according to paper
+_C.paper_lr = False
+
 def update_config(cfg, args):
     cfg.defrost()
     

@@ -436,6 +436,11 @@ def adjust_learning_rate(optimizer, epoch, config):
         lr_min = 0
         lr_max = config.lr
         lr = lr_min + 0.5 * (lr_max - lr_min) * (1 + math.cos(epoch / config.num_epochs * 3.1415926535))
+    elif config.paper_lr:
+        if epoch < 60:
+            lr = 0.1
+        else:
+            lr = 0.01
     else:
         epoch = epoch + 1
         if epoch <= 5:
