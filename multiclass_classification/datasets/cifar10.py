@@ -103,7 +103,7 @@ class CIFAR10_LT(object):
         
         train_dataset = IMBALANCECIFAR10(root=root, imb_type=imb_type, imb_factor=imb_factor, rand_number=4, train=True, download=True, transform=train_transform)
         eval_dataset = torchvision.datasets.CIFAR10(root=root, train=False, download=True, transform=eval_transform)
-        val_dataset = IMBALANCECIFAR10(root=root, imb_type=imb_type, imb_factor=config.valbalance, rand_number=1223, train=False, download=True, transform=eval_transform, size=config.valsize_factor)
+        self.val_dataset = IMBALANCECIFAR10(root=root, imb_type=imb_type, imb_factor=config.valbalance, rand_number=1223, train=False, download=True, transform=eval_transform, size=config.valsize_factor)
 
         self.cls_num_list = train_dataset.get_cls_num_list()
 
@@ -123,6 +123,6 @@ class CIFAR10_LT(object):
             eval_dataset,
             batch_size=batch_size, shuffle=False,
             num_workers=num_works, pin_memory=True)
-        self.val =  val_dataset
+        self.val =  self.val_dataset
         self.train_dataset = train_dataset
         print('train',self.cls_num_list)
