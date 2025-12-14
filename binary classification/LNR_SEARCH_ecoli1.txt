@@ -1,0 +1,13 @@
+
+___
+Architecture: mlp
+Best F1-score: 0.7609657967600469
+Best t_flip: 3.5555555555555554
+Best n_epochs: 2050
+___
+___
+Architecture: cart
+Best F1-score: 0.7678299002711572
+Best t_flip: 2.2222222222222223
+Best n_epochs: 2050
+___

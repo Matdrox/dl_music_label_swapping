@@ -1,0 +1,122 @@
+{
+    "base_mlp_abalone-17_vs_7-8-9-10": {
+        "average_precision": 0.4436190476190476,
+        "average_recall": 0.13635215403604486,
+        "average_f1": 0.19714192385866972,
+        "std_f1": 0.14696036373940105,
+        "average_gmean": 0.30482685420446853,
+        "std_gmean": 0.20696587108950465,
+        "average_auc": 0.9181954054617775,
+        "std_auc": 0.0689651936693498
+    },
+    "base_mlp_ecoli1": {
+        "average_precision": 0.7846919183502279,
+        "average_recall": 0.7674029548981908,
+        "average_f1": 0.7680936387721686,
+        "std_f1": 0.05993273296373871,
+        "average_gmean": 0.8453786921503308,
+        "std_gmean": 0.052357411923145185,
+        "average_auc": 0.9460729716734531,
+        "std_auc": 0.02869590766772112
+    },
+    "base_mlp_glass0": {
+        "average_precision": 0.6804350133304576,
+        "average_recall": 0.690461911573897,
+        "average_f1": 0.67812015698913,
+        "std_f1": 0.08095640205312432,
+        "average_gmean": 0.7594763697968405,
+        "std_gmean": 0.0634516303763688,
+        "average_auc": 0.849363717491132,
+        "std_auc": 0.040816794663605986
+    },
+    "base_mlp_vehicle1": {
+        "average_precision": 0.6653266426308777,
+        "average_recall": 0.6766609903581569,
+        "average_f1": 0.666752097231947,
+        "std_f1": 0.05128288072579666,
+        "average_gmean": 0.7703301638565867,
+        "std_gmean": 0.04325941737247849,
+        "average_auc": 0.8965436871408393,
+        "std_auc": 0.02924221076839192
+    },
+    "smote_mlp_abalone-17_vs_7-8-9-10": {
+        "average_precision": 0.227869623783166,
+        "average_recall": 0.6932239452826678,
+        "average_f1": 0.3386210558407731,
+        "std_f1": 0.053437677132011835,
+        "average_gmean": 0.8030035873105389,
+        "std_gmean": 0.07368519916714648,
+        "average_auc": 0.9152382963675605,
+        "std_auc": 0.04080191877193125
+    },
+    "smote_mlp_ecoli1": {
+        "average_precision": 0.6995048299631261,
+        "average_recall": 0.8524762694731938,
+        "average_f1": 0.7632700556478285,
+        "std_f1": 0.060719341359565734,
+        "average_gmean": 0.869947635428236,
+        "std_gmean": 0.04013491812411412,
+        "average_auc": 0.9441357478887142,
+        "std_auc": 0.026481282498481914
+    },
+    "smote_mlp_glass0": {
+        "average_precision": 0.6412781905445614,
+        "average_recall": 0.7713169114287912,
+        "average_f1": 0.6944872779484282,
+        "std_f1": 0.0789607166628289,
+        "average_gmean": 0.7744673631713698,
+        "std_gmean": 0.05886987412437297,
+        "average_auc": 0.8456574054015171,
+        "std_auc": 0.04888976676288575
+    },
+    "smote_mlp_vehicle1": {
+        "average_precision": 0.6268332156252914,
+        "average_recall": 0.7642085355231893,
+        "average_f1": 0.6862799104469408,
+        "std_f1": 0.04485479147921435,
+        "average_gmean": 0.8012437779738077,
+        "std_gmean": 0.03211706454479478,
+        "average_auc": 0.8950109038873536,
+        "std_auc": 0.024271506964380768
+    },
+    "adasyn_mlp_abalone-17_vs_7-8-9-10": {
+        "average_precision": 0.22225713445028814,
+        "average_recall": 0.6979996165946494,
+        "average_f1": 0.33272113171540596,
+        "std_f1": 0.052808886361917,
+        "average_gmean": 0.804221798115999,
+        "std_gmean": 0.07487481867116576,
+        "average_auc": 0.9171320820246048,
+        "std_auc": 0.03672394970991424
+    },
+    "adasyn_mlp_ecoli1": {
+        "average_precision": 0.6614453444701118,
+        "average_recall": 0.8612831506340636,
+        "average_f1": 0.7431883468838726,
+        "std_f1": 0.053134658047485836,
+        "average_gmean": 0.8641731843036795,
+        "std_gmean": 0.03454541502759807,
+        "average_auc": 0.9402552152727357,
+        "std_auc": 0.02279682293735102
+    },
+    "adasyn_mlp_glass0": {
+        "average_precision": 0.6053233420683091,
+        "average_recall": 0.7917360700473145,
+        "average_f1": 0.6784881677804744,
+        "std_f1": 0.08706691768117707,
+        "average_gmean": 0.7501481357946941,
+        "std_gmean": 0.12308133227295315,
+        "average_auc": 0.829429483339392,
+        "std_auc": 0.05876478895578493
+    },
+    "adasyn_mlp_vehicle1": {
+        "average_precision": 0.620349701671374,
+        "average_recall": 0.7682089137878951,
+        "average_f1": 0.683378917707143,
+        "std_f1": 0.0446487474480682,
+        "average_gmean": 0.8005074331602308,
+        "std_gmean": 0.034377231201848914,
+        "average_auc": 0.8901974801581133,
+        "std_auc": 0.023020291689331913
+    }
+}
