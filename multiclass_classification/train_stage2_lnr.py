@@ -257,6 +257,9 @@ def train_lnr(train_loader,train_loader_all, model, classifier, lws_model, crite
         thre = 7.5
     else:
         thre = 14.5
+    # Update thre based on config if otherwise specified
+    if config.tflip is not None:
+        thre = config.tflip
     if epoch == 0:
         noise_info = label_noise_rebalance(train_loader_all,model,classifier,config.uid,
                                               config, thre = thre, class_num = config.num_classes, read = 0, store= 1, dataset_name=config.dataset)

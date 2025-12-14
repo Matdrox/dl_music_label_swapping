@@ -53,6 +53,9 @@ _C.valbalance = 1.0
 _C.weights_only_model = False
 _C.state_dict_from_old_version = True
 
+# Additional param to control t_flip
+_C.tflip = None
+
 def update_config(cfg, args):
     cfg.defrost()
     
