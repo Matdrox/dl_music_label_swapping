@@ -56,6 +56,9 @@ _C.state_dict_from_old_version = True
 # Additional param to control t_flip
 _C.tflip = None
 
+# Additional parameter to toggle correct val/test split
+_C.valtestsplit = False
+
 def update_config(cfg, args):
     cfg.defrost()
     
