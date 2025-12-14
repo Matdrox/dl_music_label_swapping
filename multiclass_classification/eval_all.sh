@@ -27,8 +27,4 @@ do
 done
 python3 calc_eval.py $eval_logs
 rm $eval_logs
-
-
-# $eval_out
-#python3 eval.py --cfg  config/cifar10/eval_all.yaml | read eval_out
-# test=$(python3 eval.py --cfg  config/cifar10/eval_all.yaml)
+rm -r saved/eval_all*
