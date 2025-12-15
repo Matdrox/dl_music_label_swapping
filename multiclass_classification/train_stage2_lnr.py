@@ -301,8 +301,10 @@ def train_lnr(train_loader,train_loader_all, model, classifier, lws_model, crite
             output = classifier(feat.detach())
             output = lws_model(output)
             loss = criterion(output, target)
-        
-        acc1, acc5 = accuracy(output, target, topk=(1, 5))
+        if config.dataset != 'timesig':
+            acc1, acc5 = accuracy(output, target, topk=(1, 5))
+        else:
+            acc1, acc5 = accuracy(output, target, topk=(1, 4))
         losses.update(loss.item(), images.size(0))
         top1.update(acc1[0], images.size(0))
         top5.update(acc5[0], images.size(0))
@@ -363,7 +365,10 @@ def validate(val_loader, model, classifier, lws_model, criterion, config, logger
             loss = criterion(output, target)
 
             # measure accuracy and record loss
-            acc1, acc5 = accuracy(output, target, topk=(1, 5))
+            if config.dataset != 'timesig':
+                acc1, acc5 = accuracy(output, target, topk=(1, 5))
+            else:
+                acc1, acc5 = accuracy(output, target, topk=(1, 4))
             losses.update(loss.item(), images.size(0))
             top1.update(acc1[0], images.size(0))
             top5.update(acc5[0], images.size(0))

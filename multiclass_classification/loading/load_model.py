@@ -5,6 +5,7 @@ import torch.nn as nn
 from models import resnet
 from models import resnet_places
 from models import resnet_cifar
+from models import resnet_timesig
 from methods import LearnableWeightScaling
 from utils.metrics_selmix import *
 
@@ -30,6 +31,9 @@ def load_model(gpu, config, logger, load_lws=True):
         classifier = getattr(resnet_places, 'Classifier')(feat_in=2048, num_classes=config.num_classes)
         block = getattr(resnet_places, 'Bottleneck')(2048, 512, groups=1, base_width=64,
                                                      dilation=1, norm_layer=nn.BatchNorm2d)
+    elif config.dataset == 'timesig':
+        model = getattr(resnet_timesig, config.backbone)()
+        classifier = getattr(resnet_timesig, 'Classifier')(feat_in=512, num_classes=config.num_classes)
 
     lws_model = LearnableWeightScaling(num_classes=config.num_classes)
 

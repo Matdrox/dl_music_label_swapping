@@ -33,7 +33,7 @@ def load_data(config, selmix=False, original=True):
 
     train_loader = dataset.train_balance
     train_loader_all = dataset.train_balance
-    if config.valtestsplit:
+    if config.valtestsplit or config.dataset == 'timesig':
         val_loader = dataset.val
     else:
         val_loader = dataset.eval
