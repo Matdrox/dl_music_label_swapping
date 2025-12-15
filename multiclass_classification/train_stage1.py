@@ -23,10 +23,12 @@ from datasets.cifar100 import CIFAR100_LT
 from datasets.places import Places_LT
 from datasets.imagenet import ImageNet_LT
 from datasets.ina2018 import iNa2018
+from datasets.timesig import Timesig
 
 from models import resnet
 from models import resnet_places
 from models import resnet_cifar
+from models import resnet_timesig
 
 from utils import config, update_config, create_logger
 from utils import AverageMeter, ProgressMeter
@@ -124,6 +126,11 @@ def main_worker(gpu, ngpus_per_node, config, logger, model_dir):
         model = getattr(resnet_places, config.backbone)(pretrained=True)
         classifier = getattr(resnet_places, 'Classifier')(feat_in=2048, num_classes=config.num_classes)
         block = getattr(resnet_places, 'Bottleneck')(2048, 512, groups=1, base_width=64, dilation=1, norm_layer=nn.BatchNorm2d)
+    
+    elif config.dataset == 'timesig':
+        model = getattr(resnet_timesig, config.backbone)()
+        classifier = getattr(resnet_timesig, 'Classifier')(feat_in=512, num_classes=config.num_classes)
+
 
     if not torch.cuda.is_available():
         logger.info('using CPU, this will be slow')
@@ -210,6 +217,11 @@ def main_worker(gpu, ngpus_per_node, config, logger, model_dir):
     elif config.dataset == 'ina2018':
         dataset = iNa2018(config.distributed, root=config.data_path,
                           batch_size=config.batch_size, num_works=config.workers)
+        
+    elif config.dataset == 'timesig':
+        dataset = Timesig(config.distributed, root=config.data_path,
+                          batch_size=config.batch_size, num_works=config.workers)
+
 
     train_loader = dataset.train_instance
     val_loader = dataset.eval
@@ -329,8 +341,10 @@ def train(train_loader, model, classifier, criterion, optimizer, epoch, config, 
                 output = classifier(feat)
 
             loss = criterion(output, target)
-
-        acc1, acc5 = accuracy(output, target, topk=(1, 5))
+        if config.dataset != 'timesig':
+            acc1, acc5 = accuracy(output, target, topk=(1, 5))
+        else:
+            acc1, acc5 = accuracy(output, target, topk=(1, 4))
         losses.update(loss.item(), images.size(0))
         top1.update(acc1[0], images.size(0))
         top5.update(acc5[0], images.size(0))
@@ -372,7 +386,8 @@ def validate(val_loader, model, classifier, criterion, config, logger, block=Non
 
     with torch.no_grad():
         end = time.time()
-        for i, (images, target) in enumerate(val_loader):
+        # for i, (images, target) in enumerate(val_loader):
+        for i, (index, images, target) in enumerate(val_loader):
             if config.gpu is not None:
                 images = images.cuda(config.gpu, non_blocking=True)
             if torch.cuda.is_available():
@@ -386,7 +401,10 @@ def validate(val_loader, model, classifier, criterion, config, logger, block=Non
             loss = criterion(output, target)
 
             # measure accuracy and record loss
-            acc1, acc5 = accuracy(output, target, topk=(1, 5))
+            if config.dataset != 'timesig':
+                acc1, acc5 = accuracy(output, target, topk=(1, 5))
+            else:
+                acc1, acc5 = accuracy(output, target, topk=(1, 4))
             losses.update(loss.item(), images.size(0))
             top1.update(acc1[0], images.size(0))
             top5.update(acc5[0], images.size(0))
