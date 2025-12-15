@@ -224,7 +224,10 @@ def main_worker(gpu, ngpus_per_node, config, logger, model_dir):
 
 
     train_loader = dataset.train_instance
-    val_loader = dataset.eval
+    if config.dataset == 'timesig' or config.valtestsplit:
+        val_loader = dataset.val
+    else:
+        val_loader = dataset.eval
     if config.distributed:
         train_sampler = dataset.dist_sampler
 
