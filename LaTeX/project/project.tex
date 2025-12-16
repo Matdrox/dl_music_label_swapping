@@ -58,7 +58,7 @@
 
 % Abstract (mandatory): Give an overview of what you have done in the project with the key results and findings of your work. Should be no more than 300 words.
 \begin{abstract}
-    Data imbalance is a pervasive issue in machine learning that often hinders classifier performance by biasing predictions towards the majority class. Label-Noise-based Re-balancing (LNR) is a new method proposed by Hu et al. (2025) that introduces beneficial label noise to adjust biased decision boundaries without the drawbacks of traditional resampling techniques. We apply this method to the imbalanced music dataset Meter2800 for time signature detection, meaning to improve the detection of rare, irregular musical meters (e.g., $\frac{5}{4}$, $\frac{7}{4}$) using a ResNet18 architecture. Our results show that beneficial label noise yields slightly improved performance for recognizing minority class time signatures, though at the cost of overall accuracy.
+    Data imbalance is a pervasive issue in machine learning that often hinders classifier performance by biasing predictions towards the majority class. Label-Noise-based Re-balancing (LNR) is a new method proposed by Hu et al. (2025) that introduces beneficial label noise to adjust biased decision boundaries without the drawbacks of traditional resampling techniques. We apply this method to the imbalanced music dataset Meter2800 for time signature detection, meaning to improve the detection of rare, irregular musical meters (e.g., $\frac{5}{4}$, $\frac{7}{4}$) using a ResNet18 architecture. Our results show that beneficial label noise yields improved performance for recognizing minority class time signatures, especially given a high imbalance ratio.
 \end{abstract}
 
 % Introduction (mandatory): Describe the problem, the approach of the paper, the experiments, and the results. At the high-level talk about what you worked on in your project and why it is important. Then give an overview of your results.
@@ -308,15 +308,19 @@ $t_{flip}$ & F1 100e & Acc 100e & T-acc 100e & F1 140e & Acc 140e &  T-acc 140e 
 \label{table:time_sig_t_flip_comparisons}
 \end{table}
 
+
 \begin{figure}[hbpt]
 	\centering
-	\includegraphics[width=1\textwidth]{../figures/cm.png}
-	\caption{Confusion matrix for LNR on Meter2800 test data with $t_{flip} = 7$ after 140 epochs.}
-	\label{fig:cm_meter2800}
-\label{figure:time_sig_conf_matrix}
+	\includegraphics[width=1\textwidth]{../figures/cm_high_ir.png}
+	\caption{LNR confusion matrices on Meter2800 test data with $t_{flip} = 7$, epochs = 100 (high IR).}
+\label{fig:cm_high_ir}
 \end{figure}
 
-After having done a parameter search on the $t_{flip}$ parameter, the confusion matrix on the best setting ($t_{flip} = 7$) can be seen in Figure \ref{figure:time_sig_conf_matrix}. We find that the predicting power of the minority time signatures ($\frac{5}{4}$ and $\frac{7}{4}$) has barely improved. Table \ref{table:time_sig_t_flip_comparisons} gives some insight into why this is. In the 140 epoch setting, both the overall F1 score and the overall accuracy is the highest for $t_{flip} = 7$. According to the LNR algorithm \ref{alg:LNR_flip}, a higher $t_{flip}$ means that less labels will be flipped on average. Thus, the highest overall accuracies were achieved when the impact of LNR was minimal. However, the tail accuracy (time signatures $\frac{5}{4}$ and $\frac{7}{4}$) is the highest when $t_{flip}$ is the lowest, as in when the LNR algorithm is the most active. The test metrics of the baseline model trained for 100 epochs were $F1=0.745$ and accuracy of 80.71\%, whereas the 140 epoch model using $t_{flip} = 7$ performed better with $F1=0.751$ and accuracy of 81.37\%.
+
+
+A  parameter search was performed over $t_{flip}$, where $t_{flip} = 7$ yielded the overall highest accuracy and F1 score (see table \ref{table:time_sig_t_flip_comparisons}). We find that the predicting power of the minority time signatures ($\frac{5}{4}$ and $\frac{7}{4}$) has barely improved. According to the LNR algorithm \ref{alg:LNR_flip}, a higher $t_{flip}$ means that less labels will be flipped on average. Thus, the highest overall accuracies were achieved when the impact of LNR was minimal. However, the tail accuracy (time signatures $\frac{5}{4}$ and $\frac{7}{4}$) is the highest when $t_{flip}$ is the lowest, as in when the LNR algorithm is the most active. The test metrics of the baseline model trained for 100 epochs were $F1=0.745$ and accuracy of 80.71\%, whereas the 140 epoch model using $t_{flip} = 7$ performed better with $F1=0.751$ and accuracy of 81.37\%.
+
+To check the impact of data imbalance, we artificially decreased the number of tail classes by a factor of $0.25$ in the training set. The resulting confusion matrix after training can be seen in figure \ref{fig:cm_high_ir}. These results clearly demonstrate that LNR is the most effective at greater imbalance ratios. Here the model with LNR, trained for 80+20 epochs with $t_{flip}=7$, achieves a higher overall accuracy than the baseline, with $80.68$ for the former and $78.64$ for the latter. On top of this, the tail accuracies are dramatically different with $66.2$ when using LNR and $27.8$ for the baseline. 
 
 % Challenges (mandatory): Challenges you faced when reproducing and/or reimplmenting the paper and conducting the experiments. Were all details in the paper? Or did you have to look in the authors code or contact authors to find about some details (you are encouraged to contact the authors)? Was parts of the code quite hard to get them to work as intended? Did you have to optimize and tune several hyperparameters? Which ones? Did the framework you used make the implementation difficult in some ways?
 \section{Challenges}
@@ -333,11 +337,11 @@ In addition, the supplied git repo required a fair amount of work to get running
 % Conclusion (mandatory): Summarize your key results - what have you learned? What points do you think one should consider when using the approach of the paper you chose for your project? What can go wrong when reimplementing based on paper and why? A summary of similarities and discrepancies that you found when conducting the experiments. Suggest ideas for future extensions or new applications of your ideas.
 \section{Conclusion}
 
-The clearest result that we have been able to replicate from the LNR paper \cite{lnr} is that the method improves minority class performance. In our results, this has also generally been at the cost of general performance across classes, and not just for majority classes. This is at odds with the multiclass CIFAR-10 results of the LNR paper, where the overall performance was always the best for LNR compared to other methods.
+The clearest result that we have been able to replicate from the LNR paper \cite{lnr} is that the method improves minority class performance. In our results, this comes at the cost of general performance, when the imbalance ratio is not great enough. However, for dramatic imbalance ratios LNR also improves overall model accuracy. This is in line with the original LNR paper \cite{lnr}.
 
 When applying LNR, it is important to note the impact it might have on overall performance of the model. Even when optimized through parameter search, the overall accuracy isn't guaranteed to outperform other data-level methods. However, if minority classes are of great importance, it might be worth trying out, but not without comparing it to other methods.
 
-A positive correlation between LNR performance and data imbalance ratio was observed in most experiments. This leads us to conclude that the use of LNR is rooted in the need for fairness toward the minority class rather than general accuracy. Detection of minority classes is improved at the cost of overall performance, which might be beneficial in scenarios where minority class detection is critical. Real-world examples include the classification of odd time signatures in music, lesser known musical instruments from various cultures, or even medical diagnoses where few positive cases exist.
+There are many real-world examples of high data imbalance. These include the classification of odd time signatures in music, lesser known musical instruments from various cultures, or even medical diagnoses where few positive cases exist.
 
 It is important to note that the reproducibility factors of the LNR paper were not unproblematic. The settings and parameters for the KEEL dataset were possible to find in the paper despite them being spread out. However, for CIFAR-10 multiclass parameters, they simply referred to the default parameters in the MiSLAS\cite{mislas_paper} paper. This made it unclear which LNR paramters they had used.
 
@@ -372,7 +376,7 @@ Both a binary classification using KEEL datasets and a multiclass classification
 
 \subsection{Grades D-C-B}
 
-Grade C requires additional empirical experiments to be documented. This was done by tuning the LNR hyperparameter $t_{flip}$ on the Meter2800 dataset, showing its effect on minority class performance. Meters $\frac{5}{4}$ and $\frac{7}{4}$ are rare in Western music, making their detection challenging. Observing the resulting macro F1-scores and accuracies for different $t_{flip}$ values, we found that a moderate flip threshold of $t_{flip} = 7$ yielded the best overall accuracy, while $t_{flip} = 0$ gave the best accuracy for the minority class.
+Grade C requires additional empirical experiments to be documented. This was done by tuning the LNR hyperparameter $t_{flip}$ on the Meter2800 dataset, showing its effect on minority class performance. Meters $\frac{5}{4}$ and $\frac{7}{4}$ are rare in Western music, making their detection challenging. Observing the resulting macro F1-scores and accuracies for different $t_{flip}$ values, we found that a moderate flip threshold of $t_{flip} = 7$ yielded the best overall accuracy, while $t_{flip} = 0$ gave the best accuracy for the minority class. We also compared two imbalance ratios of $6$ and $24$, showing that the usefulness of LNR increases with imbalance ratio.
 
 % balance between proper minority class detection and performance.
 
@@ -396,6 +400,7 @@ Differing thresholds $t_{flip}$ were also tested to find the optimal setting for
 \section*{Appendix}
 
 \subsection{LNR Algorithm Pseudocode}
+\vspace{-0.6\baselineskip}
 \label{sec:appendix}
 \begin{algorithm}[H]
 	\caption{Flip labels in binary classification with noise model $\rho(x)$}
@@ -430,6 +435,7 @@ Differing thresholds $t_{flip}$ were also tested to find the optimal setting for
 \begin{table}[H]
 \centering
 \caption{Hyperparameters for LNR on Meter2800 Dataset}
+\vspace{-0.6\baselineskip}
 \label{tab:hyperparameters}
 \begin{tabular}{lc}
 \toprule
@@ -474,6 +480,17 @@ Learning rate & 0.001\\
 \label{table:keel_hyp}
 \end{table}
 For KEEL binary parameters \ref{table:keel_hyp}: Parameter tuning has been performed where there are square brackets. Tuning was performed with 3 times 4-fold cross validation over the entire dataset, reshuffled between repetitions. Parameters not mentioned have the default settings in scikit-learn or imbalanced-learn.
+
+
+\subsection{Confusion Matrices (Standard IR)}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth]{../figures/cm.png}
+	\caption{LNR confusion matrices on Meter2800 test data with $t_{flip} = 7$, epochs = 140.}
+	\label{fig:cm_meter2800}
+\label{figure:cm_meter28000}
+\end{figure}
+
 
 
 \end{document}
