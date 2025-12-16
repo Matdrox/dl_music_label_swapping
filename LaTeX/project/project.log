@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025/Homebrew) (preloaded format=pdflatex 2025.3.15)  15 DEC 2025 18:43
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025/Homebrew) (preloaded format=pdflatex 2025.3.15)  16 DEC 2025 13:40
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -337,11 +337,7 @@ Package: algorithmic 2009/08/24 v0.1 Document Style `algorithmic'
 File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count310
 \l__pdf_internal_box=\box57
-) (./project.aux
-
-LaTeX Warning: Label `tab:knn_f1_4datasets' multiply defined.
-
-)
+) (./project.aux)
 \openout1 = `project.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 55.
@@ -504,27 +500,17 @@ Package microtype Info: Loading generic protrusion settings for font family
 
 {/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/map/pdftex/updmap/pdftex.map}{/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/enc/dvips/base/8r.enc}{/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}]
 
-Package natbib Warning: Citation `tsd_resnet18' on page 2 undefined on input line 105.
-
-
-
 [2]
-Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on input line 139.
+
+Package natbib Warning: Citation `keel_dataset_ref' on page 3 undefined on input line 249.
+
 
 
 [3]
-
-Package natbib Warning: Citation `keel_dataset_ref' on page 4 undefined on input line 288.
-
-
-Overfull \hbox (37.6315pt too wide) in paragraph at lines 298--307
- [][] 
- []
-
-<../figures/cm.png, id=152, 999.4941pt x 422.0568pt>
+<../figures/cm.png, id=147, 999.4941pt x 422.0568pt>
 File: ../figures/cm.png Graphic file (type png)
 <use ../figures/cm.png>
-Package pdftex.def Info: ../figures/cm.png  used on input line 334.
+Package pdftex.def Info: ../figures/cm.png  used on input line 298.
 (pdftex.def)             Requested size: 397.48499pt x 167.84727pt.
 
 
@@ -532,62 +518,79 @@ Package pdftex.def Info: ../figures/cm.png  used on input line 334.
 pdfTeX warning (ext4): destination with the same identifier (name{table.1}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.347 A
-       dditionally, the structure of the paper makes it difficult to follow ...]
-
-[5
+l.307 \section
+              {Challenges}
 pdfTeX warning (ext4): destination with the same identifier (name{table.2}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.360 T
-       he Meter2800 dataset, while useful for it intended research purpose, ...
+l.307 \section
+              {Challenges}]
+
+[5
 pdfTeX warning (ext4): destination with the same identifier (name{table.3}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.360 T
-       he Meter2800 dataset, while useful for it intended research purpose, ...
-pdfTeX warning (ext4): destination with the same identifier (name{table.4}) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.360 T
-       he Meter2800 dataset, while useful for it intended research purpose, ...]
-
-[6
+l.319 \section
+              {Conclusion}
 pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.385 
-       <../figures/cm.png>] (./project.bbl)
+l.319 \section
+              {Conclusion} <../figures/cm.png>]
+
+Package natbib Warning: Citation `mislas_paper' on page 6 undefined on input line 327.
+
+
+
+[6] (./project.bbl)
+Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on input line 386.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+
+[7]
+pdfTeX warning (ext4): destination with the same identifier (name{subsection.10.2}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.412 \subsection{Hyperparameters}
+                                  
 
 Package natbib Warning: There were undefined citations.
 
 
 
-[7] (./project.aux)
+[8
+pdfTeX warning (ext4): destination with the same identifier (name{subsection.10.1}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.437 \end{document}
+                    
+pdfTeX warning (ext4): destination with the same identifier (name{table.4}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.437 \end{document}
+                    ] (./project.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
-
-
-LaTeX Warning: There were multiply-defined labels.
-
 Package rerunfilecheck Info: File `project.out' has not changed.
-(rerunfilecheck)             Checksum: 5AE761A4CBEEC21E30B4C5FE5BF1B4B7;3300.
+(rerunfilecheck)             Checksum: 5B0671DB4204A5CC9CC7DFC5117A08DA;3621.
  ) 
 Here is how much of TeX's memory you used:
- 13134 strings out of 473190
- 208769 string characters out of 5704335
- 653692 words of memory out of 5000000
- 35978 multiletter control sequences out of 15000+600000
- 591513 words of font info for 167 fonts, out of 8000000 for 9000
+ 13140 strings out of 473190
+ 208933 string characters out of 5704335
+ 659169 words of memory out of 5000000
+ 35986 multiletter control sequences out of 15000+600000
+ 591225 words of font info for 164 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,10n,79p,1088b,537s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,10n,79p,1177b,534s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/cm-super/sftt1000.pfb></opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on project.pdf (7 pages, 214585 bytes).
+Output written on project.pdf (8 pages, 220643 bytes).
 PDF statistics:
- 244 PDF objects out of 1000 (max. 8388607)
- 208 compressed objects within 3 object streams
- 58 named destinations out of 1000 (max. 500000)
- 35006 words of extra memory for PDF output out of 35830 (max. 10000000)
+ 264 PDF objects out of 1000 (max. 8388607)
+ 227 compressed objects within 3 object streams
+ 60 named destinations out of 1000 (max. 500000)
+ 35022 words of extra memory for PDF output out of 35830 (max. 10000000)
 

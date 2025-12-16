@@ -5,3 +5,6 @@ dataverse_files/
 
 *.png
 
+**.npz
+time_sig_replication/train_data.npz
+time_sig_replication/train_data.npz
