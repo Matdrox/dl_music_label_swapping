@@ -220,7 +220,7 @@ def main_worker(gpu, ngpus_per_node, config, logger, model_dir):
         
     elif config.dataset == 'timesig':
         dataset = Timesig(config.distributed, root=config.data_path,
-                          batch_size=config.batch_size, num_works=config.workers)
+                          batch_size=config.batch_size, num_works=config.workers, config=config)
 
 
     train_loader = dataset.train_instance
@@ -312,6 +312,7 @@ def train(train_loader, model, classifier, criterion, optimizer, epoch, config, 
 
     end = time.time()
     for i, (index, images, target) in enumerate(train_loader):
+    # for i, (images, target) in enumerate(train_loader):
         if i > end_steps:
             break
 

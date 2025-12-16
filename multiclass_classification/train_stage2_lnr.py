@@ -271,6 +271,7 @@ def train_lnr(train_loader,train_loader_all, model, classifier, lws_model, crite
                                               config, thre = thre, class_num = config.num_classes, read = 1, store= 0, dataset_name=config.dataset)
     fflag = 0        
     for i, (index, images, target) in enumerate(train_loader):
+    # for i, (images, target) in enumerate(train_loader):
         if i > end_steps:
             break
         if epoch >= 0:

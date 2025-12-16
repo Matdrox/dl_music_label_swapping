@@ -69,6 +69,8 @@ _C.loadlws = True
 # Additional param to set pure lnr in stage 2
 _C.pure_lnr = False
 
+_C.timesigimb = False
+
 def update_config(cfg, args):
     cfg.defrost()
     

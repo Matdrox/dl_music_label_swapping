@@ -5,12 +5,26 @@ import os
 from .sampler import ClassAwareSampler
 
 class Timesig_dataset(Dataset):
-    def __init__(self, path, transform=None):
+    def __init__(self, path, transform=None, imb=False):
         data = np.load(path)
         self.x = torch.from_numpy(data['X']).unsqueeze(1)
         self.targets = torch.from_numpy(data['y'])
+        if imb:
+            print("Imbalancing")
+            print(self.x.shape)
+            # Make more imbalance for 5/4
+            inds = np.where(self.targets == 2)[0]
+            inds = inds[:(inds.size // 4) * 3]
+            self.x = np.delete(self.x, inds, axis=0)
+            self.targets = np.delete(self.targets, inds, axis=0)
+            # Make more imbalance for 7/4
+            inds = np.where(self.targets == 3)[0]
+            inds = inds[:(inds.size // 4) * 3]
+            self.x = np.delete(self.x, inds, axis=0)
+            self.targets = np.delete(self.targets, inds, axis=0)
+            print(self.x.shape)
         self.num_classes = 4
-        self.cls_num_list = [np.sum(np.array(data['y'])==i) for i in range(self.num_classes)]
+        self.cls_num_list = [np.sum(np.array(self.targets.numpy())==i) for i in range(self.num_classes)]
 
     def __len__(self):
         return self.x.shape[0]
@@ -21,7 +35,7 @@ class Timesig_dataset(Dataset):
 class Timesig(object):
 
     def __init__(self, distributed, root='./data/timesig', batch_size=128, num_works=40, config = None):      
-        train_dataset = Timesig_dataset(os.path.join(root, "train_data.npz"))
+        train_dataset = Timesig_dataset(os.path.join(root, "train_data.npz"), imb=config.timesigimb)
         self.val_dataset = Timesig_dataset(os.path.join(root, "val_data.npz"))
         eval_dataset = Timesig_dataset(os.path.join(root, "test_data.npz"))
 
