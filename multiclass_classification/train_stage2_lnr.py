@@ -9,6 +9,7 @@ import pprint
 import math
 import torch
 import torch.nn.functional as F
+import torch.nn as nn
 
 from utils import config, update_config, create_logger
 from utils import AverageMeter, ProgressMeter
@@ -73,14 +74,17 @@ def main():
 def main_worker(gpu, ngpus_per_node, config, logger, model_dir):
     global best_acc1, its_ece
     config.gpu = gpu
-    model, classifier, lws_model = load_model.load_model(gpu, config, logger)
+    model, classifier, lws_model = load_model.load_model(gpu, config, logger, load_lws=config.loadlws)
 
     
     train_loader, train_loader_all, val_loader, cls_num_list = load_data.load_data(config)
     # define loss function (criterion) and optimizer
 
-    criterion = LabelAwareSmoothing(cls_num_list=cls_num_list, smooth_head=config.smooth_head,
-                                    smooth_tail=config.smooth_tail).cuda(config.gpu)
+    if config.pure_lnr:
+        criterion = nn.CrossEntropyLoss().cuda(config.gpu)
+    else:
+        criterion = LabelAwareSmoothing(cls_num_list=cls_num_list, smooth_head=config.smooth_head,
+                                        smooth_tail=config.smooth_tail).cuda(config.gpu)
 
     optimizer = torch.optim.SGD([{"params": classifier.parameters()},
                                 {'params': lws_model.parameters()}], config.lr,
@@ -301,8 +305,10 @@ def train_lnr(train_loader,train_loader_all, model, classifier, lws_model, crite
             output = classifier(feat.detach())
             output = lws_model(output)
             loss = criterion(output, target)
-        
-        acc1, acc5 = accuracy(output, target, topk=(1, 5))
+        if config.dataset != 'timesig':
+            acc1, acc5 = accuracy(output, target, topk=(1, 5))
+        else:
+            acc1, acc5 = accuracy(output, target, topk=(1, 4))
         losses.update(loss.item(), images.size(0))
         top1.update(acc1[0], images.size(0))
         top5.update(acc5[0], images.size(0))
@@ -346,7 +352,9 @@ def validate(val_loader, model, classifier, lws_model, criterion, config, logger
 
     with torch.no_grad():
         end = time.time()
-        for i, (images, target) in enumerate(val_loader):
+        # Change below when switching between timesig and others (it'll crash if you get it wrong)
+        # for i, (images, target) in enumerate(val_loader):
+        for i, (index, images, target) in enumerate(val_loader):
             if config.gpu is not None:
                 images = images.cuda(config.gpu, non_blocking=True)
             if torch.cuda.is_available():
@@ -363,7 +371,10 @@ def validate(val_loader, model, classifier, lws_model, criterion, config, logger
             loss = criterion(output, target)
 
             # measure accuracy and record loss
-            acc1, acc5 = accuracy(output, target, topk=(1, 5))
+            if config.dataset != 'timesig':
+                acc1, acc5 = accuracy(output, target, topk=(1, 5))
+            else:
+                acc1, acc5 = accuracy(output, target, topk=(1, 4))
             losses.update(loss.item(), images.size(0))
             top1.update(acc1[0], images.size(0))
             top5.update(acc5[0], images.size(0))

@@ -16,16 +16,21 @@ from datasets.cifar100 import CIFAR100_LT
 from datasets.places import Places_LT
 from datasets.imagenet import ImageNet_LT
 from datasets.ina2018 import iNa2018
+from datasets.timesig import Timesig
 
 from models import resnet
 from models import resnet_places
 from models import resnet_cifar
+from models import resnet_timesig
 
 from utils import config, update_config, create_logger
 from utils import AverageMeter, ProgressMeter
 from utils import accuracy, calibration
 
 from methods import LearnableWeightScaling
+
+from sklearn.metrics import f1_score
+from sklearn.metrics import confusion_matrix
 
 
 def parse_args():
@@ -97,6 +102,9 @@ def main_worker(gpu, ngpus_per_node, config, logger, model_dir):
         block = getattr(resnet_places, 'Bottleneck')(2048, 512, groups=1,
                                                      base_width=64, dilation=1,
                                                      norm_layer=nn.BatchNorm2d)
+    elif config.dataset == 'timesig':
+        model = getattr(resnet_timesig, config.backbone)()
+        classifier = getattr(resnet_timesig, 'Classifier')(feat_in=512, num_classes=config.num_classes)
 
     lws_model = LearnableWeightScaling(num_classes=config.num_classes)
 
@@ -132,6 +140,26 @@ def main_worker(gpu, ngpus_per_node, config, logger, model_dir):
             if config.gpu is not None:
                 # best_acc1 may be from a checkpoint from a different GPU
                 best_acc1 = best_acc1.to(config.gpu)
+            # Rename state dict due to torch version diffs
+            if config.state_dict_from_old_version:
+                renamed_state_dict = {}
+                for key in checkpoint['state_dict_model'].keys():
+                    new_key = key.replace("module.", "")
+                    renamed_state_dict[new_key] = checkpoint['state_dict_model'][key]
+                checkpoint['state_dict_model'] = renamed_state_dict
+
+                renamed_state_dict_cls = {}
+                for key in checkpoint['state_dict_classifier'].keys():
+                    new_key = key.replace("module.", "")
+                    renamed_state_dict_cls[new_key] = checkpoint['state_dict_classifier'][key]
+                checkpoint['state_dict_classifier'] = renamed_state_dict_cls
+
+                if config.mode == 'stage2':
+                    renamed_state_dict_lws = {}
+                    for key in checkpoint['state_dict_lws_model'].keys():
+                        new_key = key.replace("module.", "")
+                        renamed_state_dict_lws[new_key] = checkpoint['state_dict_lws_model'][key]
+                    checkpoint['state_dict_lws_model'] = renamed_state_dict_lws
             model.load_state_dict(checkpoint['state_dict_model'])
             classifier.load_state_dict(checkpoint['state_dict_classifier'])
             if config.dataset == 'places':
@@ -163,8 +191,11 @@ def main_worker(gpu, ngpus_per_node, config, logger, model_dir):
     elif config.dataset == 'ina2018':
         dataset = iNa2018(config.distributed, root=config.data_path,
                           batch_size=config.batch_size, num_works=config.workers)
-
-    val_loader = dataset.eval
+    elif config.dataset == 'timesig':
+        dataset = Timesig(config.distributed, root=config.data_path, batch_size=config.batch_size, num_works=config.workers, config=config)
+    # val_loader = dataset.eval
+    # For hyper parameter tuning
+    val_loader = dataset.val
     criterion = nn.CrossEntropyLoss().cuda(config.gpu)
 
     if config.dataset != 'places':
@@ -197,7 +228,8 @@ def validate(val_loader, model, classifier, lws_model, criterion, config, logger
 
     with torch.no_grad():
         end = time.time()
-        for i, (images, target) in enumerate(val_loader):
+        # for i, (images, target) in enumerate(val_loader):
+        for i, (index, images, target) in enumerate(val_loader):
             if config.gpu is not None:
                 images = images.cuda(config.gpu, non_blocking=True)
             if torch.cuda.is_available():
@@ -213,7 +245,10 @@ def validate(val_loader, model, classifier, lws_model, criterion, config, logger
             loss = criterion(output, target)
 
             # measure accuracy and record loss
-            acc1, acc5 = accuracy(output, target, topk=(1, 5))
+            if config.dataset != 'timesig':
+                acc1, acc5 = accuracy(output, target, topk=(1, 5))
+            else:
+                acc1, acc5 = accuracy(output, target, topk=(1, 4))
             losses.update(loss.item(), images.size(0))
             top1.update(acc1[0], images.size(0))
             top5.update(acc5[0], images.size(0))
@@ -246,6 +281,13 @@ def validate(val_loader, model, classifier, lws_model, criterion, config, logger
 
         cal = calibration(true_class, pred_class, confidence, num_bins=15)
         logger.info('* ECE   {ece:.3f}%.'.format(ece=cal['expected_calibration_error'] * 100))
+        if config.dataset == 'timesig':
+            print("Confusion matrix:")
+            print(confusion_matrix(true_class, pred_class))
+            print(np.sum(confusion_matrix(true_class, pred_class)))
+            print(f"F1_macro: {f1_score(true_class, pred_class, average='macro')}")
+            print(f"F1_micro: {f1_score(true_class, pred_class, average='micro')}")
+
 
     return top1.avg, cal['expected_calibration_error'] * 100
 

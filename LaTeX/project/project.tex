@@ -8,7 +8,7 @@
 % \usepackage{neurips_2018}
 
 % to compile a preprint version, e.g., for submission to arXiv, add add the
-% [preprint] option:
+% [preprint] option:§§§
 %     \usepackage[preprint]{neurips_2018}
 
 % to compile a camera-ready version, add the [final] option, e.g.:
@@ -56,79 +56,67 @@
 
 \maketitle
 
-\section{NOTES}
-
-$\rho[i_{MA}] = \text{max}(\text{tanh}(\mathcal{Z}[i_{MA}] - t_{flip}), 0)$
-
-- $\mathcal{Z}[i_{MA}]$: Z-score for each majority-class sample. High Z means that sample looks like minority class.
-
-- $t_{flip}$: Threshold that decides how large Z must be before a sample gets any change of being flipped.
-
-- $\mathcal{Z}[i_{MA}] \leq t_{flip} \rightarrow \text{tanh}(\mathcal{Z}[i_{MA}] - t_{flip}) \leq 0 \rightarrow \text{flip-rate} = 0$
-
-- $\mathcal{Z}[i_{MA}] > t_{flip} \rightarrow$ flip-rate grows as Z increases
-
-
-Project
-
-\includegraphics[width=\textwidth]{../figures/project.png}
-
+% Abstract (mandatory): Give an overview of what you have done in the project with the key results and findings of your work. Should be no more than 300 words.
 \begin{abstract}
-	Data imbalance is a pevasive issue in machine learning that often hinders classifier performance by biasing predictions towards the majority class. Label-Noise-based Rebalancing (LNR) is a novel method proposed by Hu et al. (2025) that introduces beneficial label noise to adjust biased decision boundaries without the drawbacks of traditional resampling techniques. We apply this method to the imbalanced music dataset Meter2800 for time signature detection, meaning to improve the detection of rare, irregular meters (e.g., 5/4, 7/4) using a ResNet18 architecture. Our results show that beneficial label noise yields improved performance for recognizing minority class time signatures.
+    Data imbalance is a pervasive issue in machine learning that often hinders classifier performance by biasing predictions towards the majority class. Label-Noise-based Re-balancing (LNR) is a novel method proposed by Hu et al. (2025) that introduces beneficial label noise to adjust biased decision boundaries without the drawbacks of traditional resampling techniques. We apply this method to the imbalanced music dataset Meter2800 for time signature detection, meaning to improve the detection of rare, irregular meters (e.g., 5/4, 7/4) using a ResNet18 architecture. Our results show that beneficial label noise yields slightly improved performance for recognizing minority class time signatures, though at the cost of overall accuracy.
 \end{abstract}
 
+% Introduction (mandatory): Describe the problem, the approach of the paper, the experiments, and the results. At the high-level talk about what you worked on in your project and why it is important. Then give an overview of your results.
+
+% Code repository (mandatory): link to the KTH repository containing the code corresponding to all implementations and experiments of the report
 \section{Introduction}
 
-Data imbalance is a common issue in machine learning that hinders classifier performance, leading to biased predictions favoring the majority class. In imbalanced datasets (e.g., 90\% class A, 10\% class B), accuracy is maximized by favoring class A, pushing the decision boundary deep into the territory of class B. In other words, if an exam were to have 2 options, where option A is right 90\% of the time, students would answer every question with option A, receiving a 90\% score. There is no point learning the minority class, as it is too much work for too few points, ignoring the rare minority class, as it wants to maximize its overall accuracy score.
+Data imbalance is a common issue in machine learning that hinders classifier performance, leading to biased predictions favoring the majority class. In imbalanced datasets (e.g., 90\% class A, 10\% class B), accuracy is maximized by favoring class A, pushing the decision boundary deep into the territory of class B.
 
-This results in poor performance for the minority class. Additionally, techniques such as resampling often introduce information loss or overfitting. Finding a solution is relevant in scenarios where overrepresentation of one class over another may be problematic.
+This results in poor performance for the minority class. Additionally, techniques such as resampling often introduce information loss or overfitting. Finding a solution is relevant in scenarios where over-representation of one class over another may be problematic.
 
-Recently, Hu et al. (2025) proposed a novel approach, Label-Noise-based Rebalancing (LNR), suggesting that adding beneficial label noise has the potential to adjust biased decision boundaries and improve performance without the drawbacks of traditional resampling.
+Recently, Hu et al. (2025) proposed a new approach, Label-Noise-based Re-balancing (LNR), suggesting that adding beneficial label noise has the potential to adjust biased decision boundaries and improve performance without the drawbacks of traditional resampling \cite{lnr}.
 
-Our project means to apply this method to imbalanced music datasets, specifically time signature detection. Meter2800 is an imbalanced dataset of musical excerpts labeled with time signatures, where standard meters 4/4 and 3/4 are abundant, while irregular meters such as 5/4 and 7/4 are scarce.
+Our project applies this method to imbalanced music datasets, specifically time signature detection. Meter2800 is an imbalanced dataset of musical excerpts labeled with time signatures, where standard meters 4/4 and 3/4 are abundant, while irregular meters such as 5/4 and 7/4 are scarce \cite{meter2800}.
 
 Reproducing the results of ResNet18 on Meter2800 and augmenting the training process with LNR, we seek to establish a new way of detecting complex musical meters.
 
 Code repository is available at \url{https://github.com/Matdrox/dl_music_label_swapping}
 
 
+% Related Work (mandatory): Discuss the published work related to your project paper, the types of experiments you do and the additional method that you have added to this work or you have compared this paper with (if any).
 \section{Related Work}
 
-\subsection{Label Noise Rebalancing (LNR)}
+This project is based on two separate papers. Its purpose is to combine the novel method introduced in the former paper with the architecture of the latter.
 
-Binary classification on imbalanced datasets often results in biased decision boundaries, causing misalignment between accuracy and metrics such as F1-score. LNR addresses this by introducing asymmetric label noise, selectively flipping majority class samples to the minority class based on their similarity to minority class samples Unlike symmetric noise, which affects all classes equally, LNR focuses on majority samples that are confusing (i.e., they have high posterior probabilities of looking like the minority class). This process pushes the decision boundary back toward the majority region, reclaiming space for the minority class without discarding any data.
+\subsection{Label Noise Re-balancing (LNR)}
+
+Binary classification on imbalanced datasets often results in biased decision boundaries, causing misalignment between accuracy and metrics such as F1-score. LNR addresses this by introducing asymmetric label noise, selectively flipping majority class samples to the minority class based on their similarity to minority class samples. Unlike symmetric noise, which affects all classes equally, LNR focuses on majority samples that are confusing (i.e., they have high posterior probabilities of looking like the minority class). The process of adding asymmetric noise pushes the decision boundary back only toward the majority region, reclaiming space for the minority class without discarding any data.
 
 \subsection{Time Signature Detection}
 
-Audio Similarity Matrices (ASM) and Beat Similarity Matrices (BSM) have been used as early methods for meter detection relying on signal processing. More recently, deep learning has shown superior performance. Abimbola et al. (2024) \cite{tsd_resnet18} demonstrated that a ResNet18 architecture using Mel-frequency Cepstral Coefficients (MFCCs) as input outperformed traditional machine learning models such as SVM and KNN, as well as other deep neural networks like CNN and CRNN. However, the dataset used in the paper, Meter2800, is highly imbalanced, making it a suitable candidate for testing the limits of the LNR method.
+Audio Similarity Matrices (ASM) and Beat Similarity Matrices (BSM) have been used as early methods for meter detection relying on signal processing by manual feature extraction. More recently, deep learning has shown superior performance. Abimbola et al. (2024) \cite{audio_resnet} demonstrated that a ResNet18 architecture using Mel-frequency Cepstral Coefficients (MFCCs) as input outperformed traditional machine learning models such as SVM and KNN, as well as other deep neural networks like CNN and CRNN. However, the dataset used in the paper, Meter2800, is highly imbalanced, making it a suitable candidate for testing the limits of the LNR method.
 
-
+% Methods (mandatory): Describe the original paper's method to the extent that you would need to make your report and findings understandable.
+% Otherwise, here you can describe other methods that you compare with or other methods that you apply on top of the main method of the paper.
+% Here, you also try to justify any methodical modification or incremental changes that you have added to the original paper. It may be helpful to include figures, diagrams, or tables to describe your method or compare it with other methods.
 \section{Methods}
 
 The final model architecture combines ResNet18 for time signature detection with the LNR algorithm for handling data imbalance. Imperfect representation is a classical problem in music information retrieval, where some musical concepts are inherently rare. Time signatures such as 5/4 and 7/4 are uncommon in Western music, while 4/4 and 3/4 dominate. This leads to imbalanced datasets that bias classifiers toward the majority classes, resulting in poor detection of minority class time signatures.
 
+
 \subsection{ResNet18 for Time Signature Detection}
 
-Time signature detection is approached as a supervised image classification problem using the methodology instructed by Abimbola et al. (2024) \cite{tsd_resnet18}. Raw audo signals are pre-processed into visual representations and fed into a ResNet18 architecture adapted for single-channel audio features.
-
-\subsubsection{Feature Extraction}
+Time signature detection is approached as a supervised image classification problem using the methodology instructed by Abimbola et al. (2024) \cite{audio_resnet}. Raw audio signals are pre-processed into visual representations and fed into a ResNet18 architecture adapted for single-channel audio features.
 
 Audio files are converted into Mel-frequency Cepstral Coefficients (MFCCs), compactly representing the spectral properties of the audio signal. For each 30-second audio clip, 13 cepstral coefficients are extracted over 130 time frames. In order to maintain consistency, the input dimensions are fixed to $130 \times 13$ (time frames $\times$ frequency coefficients). Each input sample $x_i$ is thus treated as a single-channel image tensor $x_i \in \mathbb{R}^{1 \times 130 \times 13}$.
 
-\subsubsection{Model Architecture}
-
 The Resnet18 architecture is a deep residual network consisting of 18 layers. While originally designed for three-channel RGB images (e.g., ImageNet), we adapt it for our low-resolution, single-channel audio features. MFCC inputs are processed through a series of residual blocks, letting it learn representations of the musical meters. The final layer is a fully connected layer that maps the extracted features to the output classes corresponding to the time signatures 3/4, 4/4, 5/4, and 7/4.
 
-\subsubsection{Training Configuration}
-
-Following the baseline settings, the model is trained using the Adam optimizer to minimize the cross-entropy loss function. A learning rate of 0.001 is used and a trained for 40 epochs.
+The original paper implements cross-entropy loss for an Adam optimizer with a learning rate of 0.001 training for 40 epochs. We have decided to work within the LNR framework, which uses SGD with an adaptive learning rate of 0.1 for epochs $<60$, 0.001 for epochs $<80$ and 0.0001 for epochs $\geq 80$. We chose to follow the LNR hyperparameters in order to better study the effects of the method, in a setting that has been optimized for its usage. Additional hyperparameters can be found in Appendix \ref{sec:appendixhyperparam}.
+%and a momentum of 0.9, and  weight decay of $2\cdot 10 ^{-4}$ in stage 1 and $5\cdot 10 ^{-5}$(HYPERPARAMETRS) \textbf{motivera varför vi tog LNR}
 
 
 \subsection{LNR Algorithm}
 
-In order to enforce the model's attention toward the minority class, LNR proposes to "lie" to the model. Instead of safely assuming the majority class, flipping the label of ambiguous samples to the minority class causes the model to pay better attention to the nuances of the minority class.
+In order to enforce the model's attention toward the minority class, LNR proposes the concept of beneficial lying. Instead of safely assuming the majority class, flipping the label of ambiguous samples to the minority class causes the model to pay better attention to the nuances of the minority class.
 
-Lying randomly would confuse the model. Therefore, beneficial noise was introduced by the implementation of the LNR algorithm as follows:
+Lying randomly would confuse the model. Therefore, beneficial noise was introduced by the implementation of the LNR algorithm. For the binary case, the noise is created as follows:
 
 - Let $X$ be the input feature space (audio spectograms) and $Y = \{0, 1\}$ be the binary label space, where 0 represents the majority class and 1 the minority class.
 
@@ -142,12 +130,258 @@ The LNR algorithm identifies confusing majority samples based on their posterior
 
 $$Z_i = \frac{\hat{\eta}(x_i) - \mu}{\sigma}$$
 
-Flip-rate probability $\rho(i)$ is computed using a hyperbolic tangent function and a scalar threshold hyperparameter $t_{flip}$:
+Flip-rate probability $\rho(i)$ is computed using a hyperbolic tangent function and a threshold hyperparameter $t_{flip}$:
 
 $$\rho(x_i) = \max(\tanh(Z_i - t_{flip}), 0)$$
 
-Labels are flipped stochastically based on $\rho(x_i)$, as only majority samples with sufficiently high confusion (i.e., $Z_i > t_{flip}$) should have a non-zero chance of being flipped to the minority class. The algorithm is given in the pseudocode below:
+Labels are flipped stochastically based on $\rho(x_i)$, as only majority samples with sufficiently high confusion (i.e., $Z_i > t_{flip}$) should have a non-zero chance of being flipped to the minority class. The algorithm is given in the pseudocode in the Appendix \hyperref[sec:appendix]{A}.
 
+
+% Data (mandatory): Describe the data you are working with for your project. What type of data is it? Where did it come from? How much data are you working with? Did you have to do any preprocessing, filtering, or other special treatment to use this data in your project?
+\section{Data}
+
+Three datasets are used in this project.
+
+\subsection{KEEL}
+
+For binary classification experiments replicating the original LNR paper, the same KEEL datasets are used. KEEL is a repository of 99 binary imbalanced datasets. From these, 32 specific datasets were selected by Hu et al. (2025) for their experiments \cite{keel}.
+
+Their chosen datasets match the following criteria:
+
+a) Baseline already achieves an F1-score over 90\%, or all methods have an F1-score lower than 10\%.
+
+b) Datasets with insufficient minority class sample size in the test dataset (less than 10).
+
+We picked out four of those selected datasets to replicate the results of: \textit{abalone-17\_vs\_7-8-9-10}, \textit{ecoli1}, \textit{glass0} and \textit{vehicle1}.
+
+\subsection{CIFAR-10}
+
+Multiclass reproduction required us to use CIFAR-10, a well-known image classification dataset consisting of 60,000 32x32 color images in 10 classes. CIFAR-100 was also used in the original paper, but it was not necessary for our reproduction.
+
+\subsection{Meter2800}
+
+Meter2800 is a time signature dataset provided by Harvard Dataverse. It contains four annotated CSV files of audio data segmented into the meter classes 3, 4, 5 and 7. The dataset also contains a total of 2800 audio files of 30 seconds each. It exhibits severe class imbalance, making it a perfect candidate for testing the LNR method. Majority classes 4/4 and 3/4 dominate the dataset with 1200 samples each, while minority classes 5/4 and 7/4 are underrepresented with only 200 samples each.
+
+% Experiments and findings (mandatory): Describe and present the experiments that you performed in detail and what is the reason for those experiments. Where applicable define evaluation metrics that you used. Discuss the results that you got. You should include graphs, tables, or other figures to illustrate your experimental results. This is the most important part of your report, be thorough, clear and detailed. Does the reporduction show a significant deviation from those results reported in the original paper? What could be the reason? What extra experiments can you think of to substantiate those speculated reasons? Do the conclusions, observations, statements, and theories of the original paper hold in the new experiments or datasets that you have tried? To what extent? Discuss the similarities and discrepancies and the possible reasonings.
+\section{Experiments and Findings}
+
+\subsection{Binary classification on KEEL datasets}
+
+
+
+{\begin{table*}[htbp]
+\setlength{\tabcolsep}{4pt}
+\centering
+\caption{F1 score, G-mean score, and AUC for CART and MLP classifiers on KEEL datasets}
+\label{tab:cart_mlp_keel}
+\makebox[\textwidth][c]{
+\begin{tabular}{l|cccc|cccc}
+\toprule
+ & \multicolumn{4}{c}{\textbf{CART}} & \multicolumn{4}{c}{\textbf{MLP}} \\
+\cmidrule(lr){2-5} \cmidrule(lr){6-9}
+Dataset
+& Baseline & LNR & SMOTE & CC
+& Baseline & LNR & SMOTE & CC \\
+\midrule
+\multicolumn{1}{c}{} 
+& \multicolumn{4}{c}{\textbf{F1 score (CART)}} 
+& \multicolumn{4}{c}{\textbf{F1 score (MLP)}} \\
+\midrule
+
+abalone[...] 
+& 0.27$\pm$0.09 & \textbf{0.33$\pm$0.07} & 0.23$\pm$0.05 & 0.17$\pm$0.04
+& 0.21$\pm$0.16 & \textbf{0.37$\pm$0.13} & 0.33$\pm$0.07 & 0.22$\pm$0.05 \\
+ecoli1
+& 0.73$\pm$0.07 & \textbf{0.75$\pm$0.05} & 0.74$\pm$0.06 & 0.71$\pm$0.07
+& 0.77$\pm$0.06 & \textbf{0.78$\pm$0.06} & 0.76$\pm$0.06 & 0.75$\pm$0.06 \\
+glass0
+& 0.69$\pm$0.07 & 0.69$\pm$0.07 & \textbf{0.70$\pm$0.08} & 0.66$\pm$0.07
+& 0.68$\pm$0.11 & 0.68$\pm$0.07 & \textbf{0.69$\pm$0.08} & 0.66$\pm$0.07 \\
+vehicle1
+& 0.50$\pm$0.05 & 0.53$\pm$0.05 & \textbf{0.54$\pm$0.05} & 0.52$\pm$0.05
+& 0.66$\pm$0.05 & 0.69$\pm$0.08 & 0.69$\pm$0.04 & 0.66$\pm$0.05 \\
+
+\midrule
+\multicolumn{1}{c}{} 
+& \multicolumn{4}{c}{\textbf{G-mean score (CART)}} 
+& \multicolumn{4}{c}{\textbf{G-mean score (MLP)}} \\
+\midrule
+
+abalone[...] 
+& 0.52$\pm$0.10 & 0.64$\pm$0.09 & 0.68$\pm$0.08 & \textbf{0.74$\pm$0.06}
+& 0.33$\pm$0.21 & 0.60$\pm$0.18 & 0.80$\pm$0.08 & \textbf{0.81$\pm$0.13} \\
+ecoli1
+& 0.83$\pm$0.05 & \textbf{0.86$\pm$0.04} & 0.85$\pm$0.04 & 0.84$\pm$0.04
+& 0.85$\pm$0.05 & 0.85$\pm$0.04 & 0.87$\pm$0.04 & 0.87$\pm$0.04 \\
+glass0
+& 0.77$\pm$0.05 & 0.77$\pm$0.05 & \textbf{0.78$\pm$0.06} & 0.75$\pm$0.05
+& 0.76$\pm$0.10 & \textbf{0.77$\pm$0.05} & 0.76$\pm$0.10 & 0.74$\pm$0.06 \\
+vehicle1
+& 0.65$\pm$0.04 & 0.68$\pm$0.04 & 0.68$\pm$0.04 & 0.68$\pm$0.04
+& 0.77$\pm$0.04 & \textbf{0.81$\pm$0.09} & 0.80$\pm$0.04 & 0.79$\pm$0.04 \\
+
+\midrule
+\multicolumn{1}{c}{} 
+& \multicolumn{4}{c}{\textbf{AUC (CART)}} 
+& \multicolumn{4}{c}{\textbf{AUC (MLP)}} \\
+\midrule
+
+abalone[...] 
+& 0.63$\pm$0.05 & 0.70$\pm$0.06 & 0.71$\pm$0.06 & \textbf{0.75$\pm$0.06}
+& 0.91$\pm$0.08 & 0.90$\pm$0.08 & 0.91$\pm$0.04 & 0.90$\pm$0.07 \\
+ecoli1
+& 0.83$\pm$0.05 & \textbf{0.86$\pm$0.04} & 0.85$\pm$0.04 & 0.84$\pm$0.04
+& \textbf{0.95$\pm$0.02} & 0.94$\pm$0.03 & 0.94$\pm$0.03 & 0.94$\pm$0.03 \\
+glass0
+& 0.78$\pm$0.05 & 0.78$\pm$0.05 & 0.78$\pm$0.05 & 0.75$\pm$0.05
+& \textbf{0.85$\pm$0.06} & 0.84$\pm$0.05 & 0.84$\pm$0.06 & 0.82$\pm$0.05 \\
+vehicle1
+& 0.67$\pm$0.03 & 0.68$\pm$0.04 & \textbf{0.69$\pm$0.03} & 0.68$\pm$0.04
+& 0.89$\pm$0.03 & 0.89$\pm$0.05 & 0.89$\pm$0.02 & 0.87$\pm$0.03 \\
+
+\bottomrule
+\end{tabular}
+}
+\label{table:KEEL_results}
+\end{table*}}
+
+
+Table \ref{table:KEEL_results} shows the results of binary classification. LNR seems to have been the most advantageous for the \textit{abalone-17\_vs\_7-8-9-10} dataset, and specifically for its F1 score, which is likely because of its relatively big imbalance ratio of 39.31 \cite{keel_dataset_ref}. This aligns with the results of the LNR paper, where it is shown that LNR is more effective the more imbalanced the dataset is \cite{lnr}. Otherwise, the results are not clearly in the favor of LNR. The results are similar to the original LNR paper \cite{lnr} in the sense that LNR outperforms the other methods in the greatest number of scenarios, even though the margins are quite slim.
+
+
+\subsection{Multiclass classification on CIFAR-10}
+
+
+\begin{table}[hbpt]
+\centering
+\caption{Accuracy for different methods}
+\label{tab:model_comparison}
+\begin{tabular}{lccccc}
+\toprule
+Method & Acc@1 & Acc@5 & H-Acc & M-Acc & T-Acc \\
+\midrule
+LNR & 83.69 $\pm$ 0.05 & 99.01 $\pm$ 0.02 & 86.29 $\pm$ 0.10 & 80.58 $\pm$ 0.05 & \textbf{85.26 $\pm$ 0.03} \\
+MiSLAS   & \textbf{83.73 $\pm$ 0.01} & \textbf{99.06 $\pm$ 0.01} & \textbf{86.43 $\pm$ 0.03} & \textbf{80.63 $\pm$ 0.02} & 85.14 $\pm$ 0.03 \\
+SelMix   & 80.55 $\pm$ 0.19 & 96.87 $\pm$ 0.19 & 79.93 $\pm$ 0.43 & 80.12 $\pm$ 0.16 & 81.75 $\pm$ 0.35 \\
+\bottomrule
+\end{tabular}
+\label{table:CIFAR_results}
+\end{table}
+
+In Table \ref{table:CIFAR_results} we can see that pure MiSLAS produces the highest overall accuracy, as well as in most subdivisions of data. However, for the tail classes, that is the minority classes with the least examples, LNR comes out on top. This result aligns with LNR's goals of improving minority class performance. By comparing our results with the ones in Table 2 in the original LNR paper \cite{lnr}, there are some observations to be made. Unlike in our results, they achieve the highest overall accuracy when using LNR. Also, SelMix actually produces the best results for their tail classes (few-shot category). One similarity is that pure MiSLAS comes out on top in terms of majority classes. 
+
+\subsection{Multiclass classification on Meter2800 dataset}
+
+\begin{table}[hbpt]
+\centering
+\caption{Macro F1-score for different $t_{flip}$ on the Meter2800 validation dataset}
+\label{tab:tflip_timesig}
+\begin{tabular}{lcccccc}
+\toprule
+$t_{flip}$ & F1 100e & Acc 100e & T-acc 100e & F1 140e & Acc 140e &  T-acc 140e \\
+\midrule
+0 & 0.7643 & 81.83 & \textbf{68.0} & 0.7792 &  83.52 & \textbf{66.83}\\
+1 & 0.7645 & 81.86 & 67.5 & 0.7787 & 83.52 & 66.17\\
+2 & \textbf{0.7655} & \textbf{81.91} & 67.5 & 0.7781 & 83.50 & 66.0\\
+3 & 0.7644 & 81.88 & 67.17 & 0.7788 & 83.55 & 66.0\\
+4 & 0.7644 & 81.88 & 67.17 & 0.7788 & 83.55 & 66.0\\
+5 & 0.7638 & 81.86 & 67.0 & 0.7796 & 83.60 & 66.0\\
+6 & 0.7638 & 81.86 & 67.0 & 0.7796 & 83.60 & 66.00\\
+7 & 0.7638 & 81.86 & 67.0 & \textbf{0.7797} & \textbf{83.62} & 65.30\\
+\bottomrule
+\end{tabular}
+\label{table:time_sig_t_flip_comparisons}
+\end{table}
+
+\begin{figure}[hbpt]
+	\centering
+	\includegraphics[width=1\textwidth]{../figures/cm.png}
+	\caption{Confusion matrix for LNR on Meter2800 test data with $t_{flip} = 7$ after 140 epochs.}
+	\label{fig:cm_meter2800}
+\label{figure:time_sig_conf_matrix}
+\end{figure}
+
+After having done a parameter search on the $t_{flip}$ parameter, the confusion matrix on the best setting ($t_{flip} = 7$) can be seen in Figure \ref{figure:time_sig_conf_matrix}. We find that the predicting power of the minority time signatures (5/4 and 7/4) has barely improved. Table \ref{table:time_sig_t_flip_comparisons} gives some insight into why this is. In the 140 epoch setting, both the overall F1 score and the overall accuracy is the highest for $t_{flip} = 7$. According to the LNR algorithm \ref{alg:LNR_flip}, a higher $t_{flip}$ means that less labels will be flipped on average. Thus, the highest overall accuracies were achieved when the impact of LNR was minimal. However, the tail accuracy (time signatures 5/4 and 7/4) is the highest when $t_{flip}$ is the lowest, as in when the LNR algorithm is the most active. The test metrics of the baseline model trained for 100 epochs were F1=0.745 and accuracy of 80.71\%, whereas the 140 epoch model using $t_{flip} = 7$ performed better with F1=0.751 and accuracy of 81.37\%.
+
+% Challenges (mandatory): Challenges you faced when reproducing and/or reimplmenting the paper and conducting the experiments. Were all details in the paper? Or did you have to look in the authors code or contact authors to find about some details (you are encouraged to contact the authors)? Was parts of the code quite hard to get them to work as intended? Did you have to optimize and tune several hyperparameters? Which ones? Did the framework you used make the implementation difficult in some ways?
+\section{Challenges}
+
+The LNR paper covers a novel, yet fairly approachable method for imbalanced dataset classification. Algorithms in form of pseudocode are provided, and the method is easy to implement.
+
+However, the paper is quite broad. In an attempt to present the benefits of the proposed LNR method, experiments were conducted using many different frameworks. This requires the reader to not only understand the theory behind the proposed method, but also the details of the various frameworks used in the experiments. This makes it difficult to reproduce the results without prior knowledge of the frameworks.
+
+Additionally, the structure of the paper makes it difficult to follow the experimental setups. The datasets used are scattered throughout the paper, and it is not always clear which datasets were used for which experiments. This requires the reader to constantly refer back to previous (or future) sections to understand the context of the experiments. Even then, some details are left out, making it difficult to fully understand the experimental setups. For example, the implementation of early stopping for multiclass training is neither described in the paper nor made clear in the code.
+
+Upon a close read of the source code provided by the authors of the LNR paper, we found that the original implementation of the CIFAR-10 experiments lacked a distinct validation split and instead uses the test set for early stopping and model selection. A standard validation set is absent in older benchmarks such as the 2009 dataset CIFAR-10, but modern best practices recommend a separate validation set to avoid overfitting to the test set. This may have lead to test data leakage in the original code, if they did use early stopping.
+In addition, the supplied git repo required a fair amount of work to get running, with several small changes throughout the code needed in order to use the training scripts.
+
+% Conclusion (mandatory): Summarize your key results - what have you learned? What points do you think one should consider when using the approach of the paper you chose for your project? What can go wrong when reimplementing based on paper and why? A summary of similarities and discrepancies that you found when conducting the experiments. Suggest ideas for future extensions or new applications of your ideas.
+\section{Conclusion}
+
+The clearest result that we have been able to replicate from the LNR paper \cite{lnr} is that the method improves minority class performance. In our results, this has also generally been at the cost of general performance across classes, and not just for majority classes. This is at odds with the multiclass CIFAR-10 results of the LNR paper, where the overall performance was always the best for LNR compared to other methods.
+
+When applying LNR, it is important to note the impact it might have on overall performance of the model. Even when optimized through parameter search, the overall accuracy isn't guaranteed to outperform other data-level methods. However, if minority classes are of great importance, it might be worth trying out, but not without comparing it to other methods.
+
+A positive correlation between LNR performance and data imbalance ratio was observed in most experiments (ÄNDRA?). This leads us to conclude that the use of LNR is rooted in the need for fairness toward the minority class rather than general accuracy. Detection of minority classes is improved at the cost of overall performance, which might be beneficial in scenarios where minority class detection is critical. Real-world examples include the classification of odd time signatures in music, lesser known musical instruments from various cultures, or even medical diagnoses where few positive cases exist.
+
+It is important to note that the reproducibility factors of the LNR paper were not unproblematic. The settings and parameters for the KEEL dataset were possible to find in the paper despite them being spread out. However, for CIFAR-10 multiclass parameters, they simply referred to the default parameters in the MiSLAS\cite{mislas_paper} paper. This made it unclear which LNR paramters they had used.
+
+In order to improve the LNR method, an interesting research endeavor could be to artificially increase the probabilities for label flipping, after they have passed the $t_{flip}$ threshold, and tune this increase as a hyperparameter. This could allow for more labels to be flipped on average.
+
+% Ethical consideration, societal impact, alignment with UN SDG targets (mandatory): Think and research! Are there any ethical considerations for the original paper, its problem or method, its way of conducting experiments? How about the experiments you did? What societal impact can you imagine about the original paper and its contributions and results? How about your project report? How do you think this paper can push or inhibit the UN SDG targets?
+\section{Ethical Consideration}
+
+Time signature detection is a niche task in music information retrieval with limited ethical implications. However, data integrity and representation remain important.
+
+The Meter2800 dataset, while useful for its intended research purpose, may not fully represent the diversity of musical styles and cultures. This could lead to biased models that perform poorly on underrepresented time signatures or genres.
+
+Fixing imbalanced datasets is an important task for machine learning in general. Real-world cases such as breast cancer detection often involve many more negative samples than positive ones, despite the importance of correctly identifying the positive cases. In these critical applications, deliberately mislabeling majority samples to improve sensitivity ought to be done with uttermost care to avoid an unacceptable increase in false positives.
+
+
+% What are the limitations of the paper in general and in particular its presentation, its theory, its proposed technical approach, its conducted experiments, its discussions. and its conclusions?
+\section{Limitations}
+
+Meter2800, although imbalanced and suitable for testing LNR, is relatively small with only 200 samples for the minority classes. The statistical significance of the improvement is harder to establish compared to large-scale image datasets like CIFAR-10.
+
+% Use the Project Grading Guideline again and assess your project along those guidelines. Argue what grade you think your project deserves and why.
+\section{Self Assessment}
+
+Assessing our project is done using the detailed assessment criteria provided by the course. The final result is a combination of reproduction and novel application of the LNR method to music time signature detection.
+
+\subsection{Grades E-D}
+
+This paper discusses the LNR method by describing its theory and implementation in detail. We argue why data imbalance is a problem and how LNR addresses it. The paper also reviews related work in the field of imbalanced classification. Coding is done by altering, rewriting, and cleaning up parts of the original LNR paper's GitHub repository.
+
+Both a binary classification using KEEL datasets and a multiclass classification using CIFAR-10 are reproduced successfully. Results closely match those reported in the original paper, confirming a correct reimplementation of the LNR method.
+
+
+\subsection{Grades D-C-B}
+
+Grade C requires additional empirical experiments to be documented. This was done by tuning the LNR hyperparameter $t_{flip}$ on the Meter2800 dataset, showing its effect on minority class performance. Meters 5/4 and 7/4 are rare in Western music, making their detection challenging. Observing the resulting macro F1-scores and accuracies for different $t_{flip}$ values, we found that a moderate flip threshold of $t_{flip} = 7$ yielded the best overall accuracy, while $t_{flip} = 0$ gave the best accuracy for the minority class.
+
+% balance between proper minority class detection and performance.
+
+
+\subsection{Grade B-A}
+
+Going beyond the scope of the original paper, we applied the LNR method to do time signature detection on the imbalanced Meter2800 dataset. This novel application required adapting the LNR algorithm to a different domain and data modality. Audio files were altered to be visualized as MFCC images, suitable for a tailored one-channel ResNet18 input.
+
+Differing thresholds $t_{flip}$ were also tested to find the optimal setting for this task. Doing so helped bring a theoretical method into practical use, along with the team's further examples of real-world applications.
+
+
+\bibliographystyle{unsrt}
+\bibliography{references}
+
+
+
+\renewcommand\thesubsection{\Alph{subsection}}
+
+\setcounter{subsection}{0}
+
+\section*{Appendix}
+
+\subsection{LNR Algorithm Pseudocode}
+\label{sec:appendix}
 \begin{algorithm}[H]
 	\caption{Flip labels in binary classification with noise model $\rho(x)$}
 	\label{alg:LNR_flip}
@@ -173,419 +407,31 @@ Labels are flipped stochastically based on $\rho(x_i)$, as only majority samples
 	\end{algorithmic}
 \end{algorithm}
 
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=\textwidth]{../figures/decision_boundaries.png}
-	\caption{Representation of majority and minority class samples in feature space. *KANSKE TAR BORT*}
-	\label{fig:decision_boundary}
-\end{figure}
 
-% \textbf{Notation:}
 
-% - $X$: Input data (audio spectograms)
-
-% - $Y$: Binary labels, where $Y = 0$ is majority class, $Y = 1$ is minority class.
-
-% - $Cf$: ResNet classifier
-
-% - $Ind_{MA}$: Set of indices of majority class samples.
-
-% - $\hat{\eta}$: Estimated posterior probabilities. Output of classifier's softmax layer. Confidence that sample belongs to minority class.
-
-% - $\mu$, $\sigma$: Mean and standard deviation of posterior probabilities for majority class samples.
-
-% - $Z$: Z-scores (standardized scores) for majority class samples. Quantifies deviation of each sample's predicted probability from the majority class mean.
-
-% By using the LNR algorithm, the model scores the majority class samples, looks for the ones it was almost unsure about, and flips their labels to the minority class. Importantly, only majority class samples get flipped to minority class samples; never the other way around.
-
-% \subsection{MiSLAS}
-
-
-
-\section{Data}
-
-Three datasets are used in this project.
-
-\subsection{KEEL}
-
-For binary classification experiments replicating the original LNR paper, the same KEEL datasets are used. KEEL is a repository of 99 binary imbalanced datasets. From these, 32 specific datasets were selected by Hu et al. (2025) for their experiments, which we also use for replication.
-
-Their chosen datasets match the following criteria:
-
-a) Baseline already achieves an F1-score over 90\%, or all methods have an F1-score lower than 10\%.
-
-b) Datasets with insufficient minority class sample size in the test dataset (less than 10).
-
-\subsection{CIFAR-10}
-
-Multiclass reproduction required us to use CIFAR-10, a well-known image classification dataset consisting of 60,000 32x32 color images in 10 classes. CIFAR-100 was also used in the original paper, but it was not necessary for our reproduction.
-
-\subsection{Meter2800}
-
-Meter2800 is a time signature dataset provided by Harvard Dataverse. It contains four annotated CSV files of audio data segmented into the meter classes 3, 4, 5 and 7. The dataset also contains a total of 2800 audio files of 30 seconds each. It exhibits severe class imbalance, making it a perfect candidate for testing the LNR method:
-
-\begin{itemize}
-	\item \textbf{Majority classes} 3/4 and 4/4 (1200 samples each).
-	\item \textbf{Minority classes} 5/4 and 7/4 (200 samples each).
-\end{itemize}
-
-\section{Experiments and Findings}
-
-% \subsection{Stage 1}
-
-% ResNet training on the original data.
-
-% \subsection{Stage 2}
-
-% ---
-% Once model has converged, LNR algorithm is performed in every training batch. Fine-tunes the decision boundary. Fixes bias in final decision layer. Backbone is frozen, only classifier head is trained. Original MiSLAS uses \textit{Label-Aware Smoothing} to adjust loss function. But MiSLAS + LNR replace smoothing with \textit{Label Flipping} by taking the frozen features from Stage 1 and applying LNR to flip the labels of confusing majority samples, retraining the final layer.---
-
-\section{Challenges}
-
-The LNR paper covers a novel, yet fairly approachable method for imbalanced dataset classification. Algorithms in form of pseudocode are provided, and the method is easy to implement.
-
-However, the paper is quite broad. In an attempt to present the benefits of the proposed LNR method, experiments were conducted using many different frameworks. This requires the reader to not only understand the theory behind the proposed method, but also the details of the various frameworks used in the experiments. This makes it difficult to reproduce the results without prior knowledge of the frameworks.
-
-Additionally, the structure of the paper makes it difficult to follow the experimental setups. The datasets used are scattered throughout the paper, and it is not always clear which datasets were used for which experiments. This requires the reader to constantly refer back to previous (or future) sections to understand the context of the experiments. Even then, some details are left out, making it difficult to fully understand the experimental setups.
-
-\section{Conclusion}
-
-\section{Ethical Consideration}
-
-Time signature detection is a niche task in music information retrieval with limited ethical implications. However, data integrity and representation remain important.
-
-The Meter2800 dataset, while useful for it intended research purpose, may not fully represent the diversity of musical styles and cultures. This could lead to biased models that perform poorly on underrepresented time signatures or genres.
-
-Fixing imbalanced datasets is an important task for machine learning in general. Real-world cases such as breast cancer detection often involve many more negative samples than positive ones, despite the importance of correctly identifying the positive cases. In these critical applications, deliberately mislabeling majority samples to improve sensitivity ought to be done with uttermost care to avoid an unacceptable increase in false positives.
-
-\section{Limitations}
-
-Meter2800, although imbalanced and suitable for testing LNR, is relatively small with only 200 samples for the minority classes. The statistical significance of the improveemnt is harder to establish compared to large-scale image datasets like CIFAR-10.
-
-\section{Self Assessment}
-
-The group aimed for an A by extending the LNR methodology to a novel domain of Music Information Retrieval. We succesfully implemented the algorithm, explained its theory, and reproduced the original results on binary and multiclass classification tasks. Moreover, we integrated LNR with a distinct deep learning pipeline (ResNet for Audio), doing more than simple reprodution.
-
-
-\section{Submission of report to DD2424}
-
-We require an electronic submission to the Canvas webpage.
-
-Please read the instructions below carefully and follow them faithfully.
-
-\subsection{Style}
-
-Papers to be submitted to NeurIPS 2018 must be prepared according to the
-instructions presented here. Papers may only be up to eight pages long,
-including figures. Additional pages \emph{containing only acknowledgments and/or
-	cited references} are allowed. Papers that exceed eight pages of content
-(ignoring references) will not be reviewed, or in any other way considered for
-presentation at the conference.
-
-The margins in 2018 are the same as since 2007, which allow for $\sim$$15\%$
-more words in the paper compared to earlier years.
-
-Authors are required to use the NeurIPS \LaTeX{} style files obtainable at the
-NeurIPS website as indicated below. Please make sure you use the current files
-and not previous versions. Tweaking the style files may be grounds for
-rejection.
-
-\subsection{Retrieval of style files}
-
-The style files for NeurIPS and other conference information are available on
-the World Wide Web at
-\begin{center}
-	\url{http://www.neurips.cc/}
-\end{center}
-The file \verb+neurips_2018.pdf+ contains these instructions and illustrates the
-various formatting requirements your NeurIPS paper must satisfy.
-
-The only supported style file for NeurIPS 2018 is \verb+neurips_2018.sty+,
-rewritten for \LaTeXe{}.  \textbf{Previous style files for \LaTeX{} 2.09,
-	Microsoft Word, and RTF are no longer supported!}
-
-The \LaTeX{} style file contains three optional arguments: \verb+final+, which
-creates a camera-ready copy, \verb+preprint+, which creates a preprint for
-submission to, e.g., arXiv, and \verb+nonatbib+, which will not load the
-\verb+natbib+ package for you in case of package clash.
-
-\paragraph{New preprint option for 2018}
-If you wish to post a preprint of your work online, e.g., on arXiv, using the
-NeurIPS style, please use the \verb+preprint+ option. This will create a
-nonanonymized version of your work with the text ``Preprint. Work in progress.''
-in the footer. This version may be distributed as you see fit. Please \textbf{do
-	not} use the \verb+final+ option, which should \textbf{only} be used for
-papers accepted to NeurIPS.
-
-At submission time, please omit the \verb+final+ and \verb+preprint+
-options. This will anonymize your submission and add line numbers to aid
-review. Please do \emph{not} refer to these line numbers in your paper as they
-will be removed during generation of camera-ready copies.
-
-The file \verb+neurips_2018.tex+ may be used as a ``shell'' for writing your
-paper. All you have to do is replace the author, title, abstract, and text of
-the paper with your own.
-
-The formatting instructions contained in these style files are summarized in
-Sections \ref{gen_inst}, \ref{headings}, and \ref{others} below.
-
-\section{General formatting instructions}
-\label{gen_inst}
-
-The text must be confined within a rectangle 5.5~inches (33~picas) wide and
-9~inches (54~picas) long. The left margin is 1.5~inch (9~picas).  Use 10~point
-type with a vertical spacing (leading) of 11~points.  Times New Roman is the
-preferred typeface throughout, and will be selected for you by default.
-Paragraphs are separated by \nicefrac{1}{2}~line space (5.5 points), with no
-indentation.
-
-The paper title should be 17~point, initial caps/lower case, bold, centered
-between two horizontal rules. The top rule should be 4~points thick and the
-bottom rule should be 1~point thick. Allow \nicefrac{1}{4}~inch space above and
-below the title to rules. All pages should start at 1~inch (6~picas) from the
-top of the page.
-
-For the final version, authors' names are set in boldface, and each name is
-centered above the corresponding address. The lead author's name is to be listed
-first (left-most), and the co-authors' names (if different address) are set to
-follow. If there is only one co-author, list both author and co-author side by
-side.
-
-Please pay special attention to the instructions in Section \ref{others}
-regarding figures, tables, acknowledgments, and references.
-
-\section{Headings: first level}
-\label{headings}
-
-All headings should be lower case (except for first word and proper nouns),
-flush left, and bold.
-
-First-level headings should be in 12-point type.
-
-\subsection{Headings: second level}
-
-Second-level headings should be in 10-point type.
-
-\subsubsection{Headings: third level}
-
-Third-level headings should be in 10-point type.
-
-\paragraph{Paragraphs}
-
-There is also a \verb+\paragraph+ command available, which sets the heading in
-bold, flush left, and inline with the text, with the heading followed by 1\,em
-of space.
-
-\section{Citations, figures, tables, references}
-\label{others}
-
-These instructions apply to everyone.
-
-\subsection{Citations within the text}
-
-The \verb+natbib+ package will be loaded for you by default.  Citations may be
-author/year or numeric, as long as you maintain internal consistency.  As to the
-format of the references themselves, any style is acceptable as long as it is
-used consistently.
-
-The documentation for \verb+natbib+ may be found at
-\begin{center}
-	\url{http://mirrors.ctan.org/macros/latex/contrib/natbib/natnotes.pdf}
-\end{center}
-Of note is the command \verb+\citet+, which produces citations appropriate for
-use in inline text.  For example,
-\begin{verbatim}
-   \citet{hasselmo} investigated\dots
-\end{verbatim}
-produces
-\begin{quote}
-	Hasselmo, et al.\ (1995) investigated\dots
-\end{quote}
-
-If you wish to load the \verb+natbib+ package with options, you may add the
-following before loading the \verb+neurips_2018+ package:
-\begin{verbatim}
-   \PassOptionsToPackage{options}{natbib}
-\end{verbatim}
-
-If \verb+natbib+ clashes with another package you load, you can add the optional
-argument \verb+nonatbib+ when loading the style file:
-\begin{verbatim}
-   \usepackage[nonatbib]{neurips_2018}
-\end{verbatim}
-
-As submission is double blind, refer to your own published work in the third
-person. That is, use ``In the previous work of Jones et al.\ [4],'' not ``In our
-previous work [4].'' If you cite your other papers that are not widely available
-(e.g., a journal paper under review), use anonymous author names in the
-citation, e.g., an author of the form ``A.\ Anonymous.''
-
-\subsection{Footnotes}
-
-Footnotes should be used sparingly.  If you do require a footnote, indicate
-footnotes with a number\footnote{Sample of the first footnote.} in the
-text. Place the footnotes at the bottom of the page on which they appear.
-Precede the footnote with a horizontal rule of 2~inches (12~picas).
-
-Note that footnotes are properly typeset \emph{after} punctuation
-marks.\footnote{As in this example.}
-
-\subsection{Figures}
-
-\begin{figure}
-	\centering
-	\fbox{\rule[-.5cm]{0cm}{4cm} \rule[-.5cm]{4cm}{0cm}}
-	\caption{Sample figure caption.}
-\end{figure}
-
-All artwork must be neat, clean, and legible. Lines should be dark enough for
-purposes of reproduction. The figure number and caption always appear after the
-figure. Place one line space before the figure caption and one line space after
-the figure. The figure caption should be lower case (except for first word and
-proper nouns); figures are numbered consecutively.
-
-You may use color figures.  However, it is best for the figure captions and the
-paper body to be legible if the paper is printed in either black/white or in
-color.
-
-\subsection{Tables}
-
-All tables must be centered, neat, clean and legible.  The table number and
-title always appear before the table.  See Table~\ref{sample-table}.
-
-Place one line space before the table title, one line space after the
-table title, and one line space after the table. The table title must
-be lower case (except for first word and proper nouns); tables are
-numbered consecutively.
-
-Note that publication-quality tables \emph{do not contain vertical rules.} We
-strongly suggest the use of the \verb+booktabs+ package, which allows for
-typesetting high-quality, professional tables:
-\begin{center}
-	\url{https://www.ctan.org/pkg/booktabs}
-\end{center}
-This package was used to typeset Table~\ref{sample-table}.
-
-\begin{table}
-	\caption{Sample table title}
-	\label{sample-table}
-	\centering
-	\begin{tabular}{lll}
-		\toprule
-		\multicolumn{2}{c}{Part}                   \\
-		\cmidrule(r){1-2}
-		Name     & Description     & Size ($\mu$m) \\
-		\midrule
-		Dendrite & Input terminal  & $\sim$100     \\
-		Axon     & Output terminal & $\sim$10      \\
-		Soma     & Cell body       & up to $10^6$  \\
-		\bottomrule
-	\end{tabular}
+\subsection{Hyperparameters}
+\label{sec:appendixhyperparam}
+
+\begin{table}[H]
+\centering
+\caption{Hyperparameters for LNR on Meter2800 Dataset}
+\label{tab:hyperparameters}
+\begin{tabular}{lc}
+\toprule
+Hyperparameter & Value \\
+\midrule
+Batch size & 128 \\
+Initial learning rate & 0.1 \\
+Learning rate decay schedule & Epochs 60, 80 \\
+Momentum & 0.9 \\
+Weight decay & $2 \cdot 10^{-4}$ (stage 1), $
+5 \cdot 10^{-5}$ (stage 2) \\
+Number of epochs & 100, 140 \\
+LNR epoch & 80, 100 \\
+$t_{flip}$ & 0, 1, 2, 3, 4
+, 5, 6, 7 \\
+\bottomrule
+\end{tabular}
 \end{table}
-
-\section{Final instructions}
-
-Do not change any aspects of the formatting parameters in the style files.  In
-particular, do not modify the width or length of the rectangle the text should
-fit into, and do not change font sizes (except perhaps in the
-\textbf{References} section; see below). Please note that pages should be
-numbered.
-
-\section{Preparing PDF files}
-
-Please prepare submission files with paper size ``US Letter,'' and not, for
-example, ``A4.''
-
-Fonts were the main cause of problems in the past years. Your PDF file must only
-contain Type 1 or Embedded TrueType fonts. Here are a few instructions to
-achieve this.
-
-\begin{itemize}
-
-	\item You should directly generate PDF files using \verb+pdflatex+.
-
-	\item You can check which fonts a PDF files uses.  In Acrobat Reader, select the
-	      menu Files$>$Document Properties$>$Fonts and select Show All Fonts. You can
-	      also use the program \verb+pdffonts+ which comes with \verb+xpdf+ and is
-	      available out-of-the-box on most Linux machines.
-
-	\item The IEEE has recommendations for generating PDF files whose fonts are also
-	      acceptable for NeurIPS. Please see
-	      \url{http://www.emfield.org/icuwb2010/downloads/IEEE-PDF-SpecV32.pdf}
-
-	\item \verb+xfig+ "patterned" shapes are implemented with bitmap fonts.  Use
-	      "solid" shapes instead.
-
-	\item The \verb+\bbold+ package almost always uses bitmap fonts.  You should use
-	      the equivalent AMS Fonts:
-	      \begin{verbatim}
-   \usepackage{amsfonts}
-\end{verbatim}
-	      followed by, e.g., \verb+\mathbb{R}+, \verb+\mathbb{N}+, or \verb+\mathbb{C}+
-	      for $\mathbb{R}$, $\mathbb{N}$ or $\mathbb{C}$.  You can also use the following
-	      workaround for reals, natural and complex:
-	      \begin{verbatim}
-   \newcommand{\RR}{I\!\!R} %real numbers
-   \newcommand{\Nat}{I\!\!N} %natural numbers
-   \newcommand{\CC}{I\!\!\!\!C} %complex numbers
-\end{verbatim}
-	      Note that \verb+amsfonts+ is automatically loaded by the \verb+amssymb+ package.
-
-\end{itemize}
-
-If your file contains type 3 fonts or non embedded TrueType fonts, we will ask
-you to fix it.
-
-\subsection{Margins in \LaTeX{}}
-
-Most of the margin problems come from figures positioned by hand using
-\verb+\special+ or other commands. We suggest using the command
-\verb+\includegraphics+ from the \verb+graphicx+ package. Always specify the
-figure width as a multiple of the line width as in the example below:
-\begin{verbatim}
-   \usepackage[pdftex]{graphicx} ...
-   \includegraphics[width=0.8\linewidth]{myfile.pdf}
-\end{verbatim}
-See Section 4.4 in the graphics bundle documentation
-(\url{http://mirrors.ctan.org/macros/latex/required/graphics/grfguide.pdf})
-
-A number of width problems arise when \LaTeX{} cannot properly hyphenate a
-line. Please give LaTeX hyphenation hints using the \verb+\-+ command when
-necessary.
-
-\subsubsection*{Acknowledgments}
-
-Use unnumbered third level headings for the acknowledgments. All acknowledgments
-go at the end of the paper. Do not include acknowledgments in the anonymized
-submission, only in the final paper.
-
-\section*{References}
-
-References follow the acknowledgments. Use unnumbered first-level heading for
-the references. Any choice of citation style is acceptable as long as you are
-consistent. It is permissible to reduce the font size to \verb+small+ (9 point)
-when listing the references. {\bf Remember that you can use more than eight
-		pages as long as the additional pages contain \emph{only} cited references.}
-\medskip
-
-\small
-
-[1] Alexander, J.A.\ \& Mozer, M.C.\ (1995) Template-based algorithms for
-connectionist rule extraction. In G.\ Tesauro, D.S.\ Touretzky and T.K.\ Leen
-(eds.), {\it Advances in Neural Information Processing Systems 7},
-pp.\ 609--616. Cambridge, MA: MIT Press.
-
-	[2] Bower, J.M.\ \& Beeman, D.\ (1995) {\it The Book of GENESIS: Exploring
-		Realistic Neural Models with the GEneral NEural SImulation System.}  New York:
-TELOS/Springer--Verlag.
-
-[3] Hasselmo, M.E., Schnell, E.\ \& Barkai, E.\ (1995) Dynamics of learning and
-recall at excitatory recurrent synapses and cholinergic modulation in rat
-hippocampal region CA3. {\it Journal of Neuroscience} {\bf 15}(7):5249-5262.
-
-
-% references from references.bib:
-\bibliographystyle{unsrt}
-\bibliography{references}
 
 \end{document}
