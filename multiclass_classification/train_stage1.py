@@ -389,6 +389,7 @@ def validate(val_loader, model, classifier, criterion, config, logger, block=Non
 
     with torch.no_grad():
         end = time.time()
+        # Change below accordingly if you use timesig or cifar10 (you'll know when it crashes)
         # for i, (images, target) in enumerate(val_loader):
         for i, (index, images, target) in enumerate(val_loader):
             if config.gpu is not None:
@@ -460,8 +461,10 @@ def adjust_learning_rate(optimizer, epoch, config):
     elif config.paper_lr:
         if epoch < 60:
             lr = 0.1
-        else:
+        elif epoch < 80 or not config.stage1_only:
             lr = 0.01
+        else:
+            lr = 0.0001
     else:
         epoch = epoch + 1
         if epoch <= 5:

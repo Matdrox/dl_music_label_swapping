@@ -61,6 +61,13 @@ _C.valtestsplit = False
 
 # Additonal param to set learning rate according to paper
 _C.paper_lr = False
+_C.stage1_only = False
+
+# Additonal param to set loading lws
+_C.loadlws = True
+
+# Additional param to set pure lnr in stage 2
+_C.pure_lnr = False
 
 def update_config(cfg, args):
     cfg.defrost()
