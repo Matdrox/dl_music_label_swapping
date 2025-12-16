@@ -1,8 +1,23 @@
 \begin{thebibliography}{1}
 
-\bibitem{tsd_resnet18}
+\bibitem{lnr}
+Guangzheng Hu, Feng Liu, Mingming Gong, Guanghui Wang, and Liuhua Peng.
+\newblock Learning imbalanced data with beneficial label noise.
+\newblock In {\em Forty-second International Conference on Machine Learning}, 2025.
+
+\bibitem{meter2800}
+Jeremiah Abimbola, Daniel Kostrzewa, and Pawe{\l} Kasprowski.
+\newblock Meter2800: A novel dataset for music time signature detection.
+\newblock {\em Data in Brief}, 51:109736, 2023.
+
+\bibitem{audio_resnet}
 Jeremiah Abimbola, Daniel Kostrzewa, and Pawe{\l} Kasprowski.
 \newblock Music time signature detection using resnet18.
 \newblock {\em EURASIP journal on audio, speech, and music processing}, 2024(1):30--10, 2024.
+
+\bibitem{keel}
+Joaqu{\'\i}n Derrac, Salvador Garc{\'\i}a, Luciano S{\'a}nchez, and Francisco Herrera.
+\newblock Keel data-mining software tool: Data set repository, integration of algorithms and experimental analysis framework.
+\newblock {\em Journal of Multiple-Valued Logic and Soft Computing}, 17:255--287, 2015.
 
 \end{thebibliography}
