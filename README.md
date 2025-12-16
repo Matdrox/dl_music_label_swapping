@@ -3,6 +3,8 @@
 **Authors:** [Matei Cananau](https://github.com/matdrox), [Gustaw Siedlarski](https://github.com/gustawsi), [Alexander Själander](https://github.com/Soultoo)  
 **Institution:** KTH Royal Institute of Technology
 
+**Project Report PDF:** [View here](https://github.com/Matdrox/dl_music_label_swapping/blob/main/LaTeX/project/project.pdf)
+
 ## Abstract
 
 Data imbalance is a pervasive issue in machine learning that often hinders classifier performance by biasing predictions towards the majority class. **Label-Noise-based Re-balancing (LNR)** is a new method proposed by Hu et al. (2025) that introduces beneficial label noise to adjust biased decision boundaries without the drawbacks of traditional resampling techniques.
