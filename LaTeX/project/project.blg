@@ -3,11 +3,10 @@ Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: project.aux
 The style file: unsrt.bst
 Database file #1: references.bib
-Warning--I didn't find a database entry for "tsd_resnet18"
 Warning--I didn't find a database entry for "keel_dataset_ref"
 You've used 4 entries,
             1791 wiz_defined-function locations,
-            474 strings with 4346 characters,
+            473 strings with 4334 characters,
 and the built_in function-call counts, 950 in all, are:
 = -- 74
 > -- 53
@@ -46,4 +45,4 @@ warning$ -- 0
 while$ -- 8
 width$ -- 5
 write$ -- 45
-(There were 2 warnings)
+(There was 1 warning)

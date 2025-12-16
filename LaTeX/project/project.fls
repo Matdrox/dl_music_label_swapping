@@ -204,8 +204,6 @@ INPUT /opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/tfm/adobe/t
 INPUT /opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc
 INPUT /opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/vf/adobe/times/ptmr8t.vf
 INPUT /opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/tfm/adobe/times/ptmr8r.tfm
-INPUT /opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/tfm/adobe/times/ptmr8t.tfm
-INPUT /opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/tfm/adobe/times/ptmr8t.tfm
 INPUT /opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/tfm/adobe/times/ptmri8t.tfm
 INPUT /opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/vf/adobe/times/ptmri8t.vf
 INPUT /opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/tfm/adobe/times/ptmri8r.tfm
@@ -217,6 +215,8 @@ INPUT ../figures/cm.png
 INPUT ./project.bbl
 INPUT ./project.bbl
 INPUT project.bbl
+INPUT /opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/tfm/adobe/times/ptmr8t.tfm
+INPUT /opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/tfm/adobe/times/ptmr8t.tfm
 INPUT project.aux
 INPUT ./project.out
 INPUT ./project.out

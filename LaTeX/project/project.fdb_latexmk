@@ -1,15 +1,15 @@
 # Fdb version 4
-["bibtex project"] 1765820603.15328 "project.aux" "project.bbl" "project" 1765820603.75697 0
+["bibtex project"] 1765883400.764 "project.aux" "project.bbl" "project" 1765883401.47313 0
   "./references.bib" 1765810420.4914 1796 67ff76e523f75cef2619c7f55fa44866 ""
   "/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/bibtex/bst/base/unsrt.bst" 1741388039 18030 1376b4b231b50c66211e47e42eda2875 ""
-  "project.aux" 1765820603.62799 5247 f6086aac1a3f9607e6b958c18acaed9d "pdflatex"
+  "project.aux" 1765883401.33363 6087 a379f530dd51ba40baf5c510fcf2b4da "pdflatex"
   (generated)
   "project.bbl"
   "project.blg"
   (rewritten before read)
-["pdflatex"] 1765820603.20385 "/Users/mateicananau/Projects/KTH/Deep_Learning_Advanced/Final_project/LaTeX/project/project.tex" "project.pdf" "project" 1765820603.7571 0
+["pdflatex"] 1765883400.81239 "/Users/mateicananau/Projects/KTH/Deep_Learning_Advanced/Final_project/LaTeX/project/project.tex" "project.pdf" "project" 1765883401.47324 0
   "../figures/cm.png" 1765820258.33474 49020 a3f0e6fc41cd0a6bdfafdfaa80a09180 ""
-  "/Users/mateicananau/Projects/KTH/Deep_Learning_Advanced/Final_project/LaTeX/project/project.tex" 1765820602.33618 27701 0bed5ff56e292056275eed98cd4909ad ""
+  "/Users/mateicananau/Projects/KTH/Deep_Learning_Advanced/Final_project/LaTeX/project/project.tex" 1765883399.90019 30229 32c586837a9ef8255a7b7eb682184cb3 ""
   "/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/enc/dvips/base/8r.enc" 1741388039 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc" 1741388039 2971 def0b6c1f0b107b3b936def894055589 ""
   "/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/map/fontname/texfonts.map" 1741388039 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -115,10 +115,10 @@
   "/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/web2c/texmf.cnf" 1741388039 42151 79f67285bdd95beca4d137b380b4b9e5 ""
   "/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-var/web2c/pdftex/pdflatex.fmt" 1741388039 3346141 1288109d02d1c772df65535881471649 ""
   "nips_2018.sty" 1761297835.64057 11037 e2b9ada9436caf290c079d9d06a6a01a ""
-  "project.aux" 1765820603.62799 5247 f6086aac1a3f9607e6b958c18acaed9d "pdflatex"
-  "project.bbl" 1765820603.20228 1043 5555aa3e4394ba1c7ab1a0639bb1f791 "bibtex project"
-  "project.out" 1765820603.62861 3300 5ae761a4cbeec21e30b4c5fe5bf1b4b7 "pdflatex"
-  "project.tex" 1765820602.33618 27701 0bed5ff56e292056275eed98cd4909ad ""
+  "project.aux" 1765883401.33363 6087 a379f530dd51ba40baf5c510fcf2b4da "pdflatex"
+  "project.bbl" 1765883400.81086 1043 5555aa3e4394ba1c7ab1a0639bb1f791 "bibtex project"
+  "project.out" 1765883401.33432 3621 5b0671db4204a5cc9cc7dfc5117a08da "pdflatex"
+  "project.tex" 1765883399.90019 30229 32c586837a9ef8255a7b7eb682184cb3 ""
   (generated)
   "project.aux"
   "project.log"
