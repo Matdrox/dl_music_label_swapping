@@ -58,7 +58,7 @@
 
 % Abstract (mandatory): Give an overview of what you have done in the project with the key results and findings of your work. Should be no more than 300 words.
 \begin{abstract}
-    Data imbalance is a pervasive issue in machine learning that often hinders classifier performance by biasing predictions towards the majority class. Label-Noise-based Re-balancing (LNR) is a novel method proposed by Hu et al. (2025) that introduces beneficial label noise to adjust biased decision boundaries without the drawbacks of traditional resampling techniques. We apply this method to the imbalanced music dataset Meter2800 for time signature detection, meaning to improve the detection of rare, irregular meters (e.g., 5/4, 7/4) using a ResNet18 architecture. Our results show that beneficial label noise yields slightly improved performance for recognizing minority class time signatures, though at the cost of overall accuracy.
+    Data imbalance is a pervasive issue in machine learning that often hinders classifier performance by biasing predictions towards the majority class. Label-Noise-based Re-balancing (LNR) is a new method proposed by Hu et al. (2025) that introduces beneficial label noise to adjust biased decision boundaries without the drawbacks of traditional resampling techniques. We apply this method to the imbalanced music dataset Meter2800 for time signature detection, meaning to improve the detection of rare, irregular musical meters (e.g., $\frac{5}{4}$, $\frac{7}{4}$) using a ResNet18 architecture. Our results show that beneficial label noise yields slightly improved performance for recognizing minority class time signatures, though at the cost of overall accuracy.
 \end{abstract}
 
 % Introduction (mandatory): Describe the problem, the approach of the paper, the experiments, and the results. At the high-level talk about what you worked on in your project and why it is important. Then give an overview of your results.
@@ -68,11 +68,11 @@
 
 Data imbalance is a common issue in machine learning that hinders classifier performance, leading to biased predictions favoring the majority class. In imbalanced datasets (e.g., 90\% class A, 10\% class B), accuracy is maximized by favoring class A, pushing the decision boundary deep into the territory of class B.
 
-This results in poor performance for the minority class. Additionally, techniques such as resampling often introduce information loss or overfitting. Finding a solution is relevant in scenarios where over-representation of one class over another may be problematic.
+This results in poor acknowledgment for the minority class. Additionally, techniques such as resampling often introduce information loss or overfitting. Finding a solution is relevant in scenarios where over-representation of one class over another may be problematic.
 
 Recently, Hu et al. (2025) proposed a new approach, Label-Noise-based Re-balancing (LNR), suggesting that adding beneficial label noise has the potential to adjust biased decision boundaries and improve performance without the drawbacks of traditional resampling \cite{lnr}.
 
-Our project applies this method to imbalanced music datasets, specifically time signature detection. Meter2800 is an imbalanced dataset of musical excerpts labeled with time signatures, where standard meters 4/4 and 3/4 are abundant, while irregular meters such as 5/4 and 7/4 are scarce \cite{meter2800}.
+Our project applies this method to imbalanced music datasets, specifically time signature detection. Meter2800 is an imbalanced dataset of musical excerpts labeled with time signatures, where standard meters $\frac{4}{4}$ and $\frac{3}{4}$ are abundant, while irregular meters such as $\frac{5}{4}$ and $\frac{7}{4}$ are scarce \cite{meter2800}.
 
 Reproducing the results of ResNet18 on Meter2800 and augmenting the training process with LNR, we seek to establish a new way of detecting complex musical meters.
 
@@ -97,7 +97,7 @@ Audio Similarity Matrices (ASM) and Beat Similarity Matrices (BSM) have been use
 % Here, you also try to justify any methodical modification or incremental changes that you have added to the original paper. It may be helpful to include figures, diagrams, or tables to describe your method or compare it with other methods.
 \section{Methods}
 
-The final model architecture combines ResNet18 for time signature detection with the LNR algorithm for handling data imbalance. Imperfect representation is a classical problem in music information retrieval, where some musical concepts are inherently rare. Time signatures such as 5/4 and 7/4 are uncommon in Western music, while 4/4 and 3/4 dominate. This leads to imbalanced datasets that bias classifiers toward the majority classes, resulting in poor detection of minority class time signatures.
+The final model architecture combines ResNet18 for time signature detection with the LNR algorithm for handling data imbalance. Imperfect representation is a classical problem in music information retrieval, where some musical concepts are inherently rare. Time signatures such as $\frac{5}{4}$ and $\frac{7}{4}$ are uncommon in Western music, while $\frac{4}{4}$ and $\frac{3}{4}$ dominate. This leads to imbalanced datasets that bias classifiers toward the majority classes, resulting in poor detection of minority class time signatures.
 
 
 \subsection{ResNet18 for Time Signature Detection}
@@ -106,7 +106,7 @@ Time signature detection is approached as a supervised image classification prob
 
 Audio files are converted into Mel-frequency Cepstral Coefficients (MFCCs), compactly representing the spectral properties of the audio signal. For each 30-second audio clip, 13 cepstral coefficients are extracted over 130 time frames. In order to maintain consistency, the input dimensions are fixed to $130 \times 13$ (time frames $\times$ frequency coefficients). Each input sample $x_i$ is thus treated as a single-channel image tensor $x_i \in \mathbb{R}^{1 \times 130 \times 13}$.
 
-The Resnet18 architecture is a deep residual network consisting of 18 layers. While originally designed for three-channel RGB images (e.g., ImageNet), we adapt it for our low-resolution, single-channel audio features. MFCC inputs are processed through a series of residual blocks, letting it learn representations of the musical meters. The final layer is a fully connected layer that maps the extracted features to the output classes corresponding to the time signatures 3/4, 4/4, 5/4, and 7/4.
+The Resnet18 architecture is a deep residual network consisting of 18 layers. While originally designed for three-channel RGB images (e.g., ImageNet), we adapt it for our low-resolution, single-channel audio features. MFCC inputs are processed through a series of residual blocks, letting it learn representations of the musical meters. The final layer is a fully connected layer that maps the extracted features to the output classes corresponding to the time signatures $\frac{3}{4}, \frac{4}{4}, \frac{5}{4}, and \frac{7}{4}$.
 
 The original paper implements cross-entropy loss for an Adam optimizer with a learning rate of 0.001 training for 40 epochs. We have decided to work within the LNR framework, which uses SGD with an adaptive learning rate of 0.1 for epochs $<60$, 0.001 for epochs $<80$ and 0.0001 for epochs $\geq 80$. We chose to follow the LNR hyperparameters in order to better study the effects of the method, in a setting that has been optimized for its usage. Additional hyperparameters can be found in Appendix \ref{sec:appendixhyperparam}.
 %and a momentum of 0.9, and  weight decay of $2\cdot 10 ^{-4}$ in stage 1 and $5\cdot 10 ^{-5}$(HYPERPARAMETRS) \textbf{motivera varför vi tog LNR}
@@ -128,19 +128,32 @@ Lying randomly would confuse the model. Therefore, beneficial noise was introduc
 
 The LNR algorithm identifies confusing majority samples based on their posterior probabilities. Calculating the mean $\mu$ and standard deviation $\sigma$ of these probabilities after passing them through the classifier's softmax layer, the standardized Z-score $Z_i$ for each majority sample is computed as:
 
+\vspace{-0.6\baselineskip}
+
 $$Z_i = \frac{\hat{\eta}(x_i) - \mu}{\sigma}$$
+
+\vspace{-0.6\baselineskip}
+
 
 Flip-rate probability $\rho(i)$ is computed using a hyperbolic tangent function and a threshold hyperparameter $t_{flip}$:
 
+\vspace{-0.6\baselineskip}
+
 $$\rho(x_i) = \max(\tanh(Z_i - t_{flip}), 0)$$
+
+\vspace{-0.2\baselineskip}
 
 Labels are flipped stochastically based on $\rho(x_i)$, as only majority samples with sufficiently high confusion (i.e., $Z_i > t_{flip}$) should have a non-zero chance of being flipped to the minority class. The algorithm is given in the pseudocode in the Appendix \hyperref[sec:appendix]{A}.
 
 
-% Data (mandatory): Describe the data you are working with for your project. What type of data is it? Where did it come from? How much data are you working with? Did you have to do any preprocessing, filtering, or other special treatment to use this data in your project?
+
 \section{Data}
 
+\vspace{-0.4\baselineskip}
+
 Three datasets are used in this project.
+
+\vspace{-0.4\baselineskip}
 
 \subsection{KEEL}
 
@@ -160,7 +173,9 @@ Multiclass reproduction required us to use CIFAR-10, a well-known image classifi
 
 \subsection{Meter2800}
 
-Meter2800 is a time signature dataset provided by Harvard Dataverse. It contains four annotated CSV files of audio data segmented into the meter classes 3, 4, 5 and 7. The dataset also contains a total of 2800 audio files of 30 seconds each. It exhibits severe class imbalance, making it a perfect candidate for testing the LNR method. Majority classes 4/4 and 3/4 dominate the dataset with 1200 samples each, while minority classes 5/4 and 7/4 are underrepresented with only 200 samples each.
+
+Meter2800 is a time signature dataset provided by Harvard Dataverse. It contains four annotated CSV files of audio data segmented into the meter classes 3, 4, 5 and 7. The dataset also contains a total of 2800 audio files of 30 seconds each. It exhibits severe class imbalance, making it a perfect candidate for testing the LNR method. Majority classes $\frac{4}{4}$ and $\frac{3}{4}$ dominate the dataset with 1200 samples each, while minority classes $\frac{5}{4}$ and $\frac{7}{4}$ are underrepresented with only 200 samples each.
+
 
 % Experiments and findings (mandatory): Describe and present the experiments that you performed in detail and what is the reason for those experiments. Where applicable define evaluation metrics that you used. Discuss the results that you got. You should include graphs, tables, or other figures to illustrate your experimental results. This is the most important part of your report, be thorough, clear and detailed. Does the reporduction show a significant deviation from those results reported in the original paper? What could be the reason? What extra experiments can you think of to substantiate those speculated reasons? Do the conclusions, observations, statements, and theories of the original paper hold in the new experiments or datasets that you have tried? To what extent? Discuss the similarities and discrepancies and the possible reasonings.
 \section{Experiments and Findings}
@@ -301,7 +316,7 @@ $t_{flip}$ & F1 100e & Acc 100e & T-acc 100e & F1 140e & Acc 140e &  T-acc 140e 
 \label{figure:time_sig_conf_matrix}
 \end{figure}
 
-After having done a parameter search on the $t_{flip}$ parameter, the confusion matrix on the best setting ($t_{flip} = 7$) can be seen in Figure \ref{figure:time_sig_conf_matrix}. We find that the predicting power of the minority time signatures (5/4 and 7/4) has barely improved. Table \ref{table:time_sig_t_flip_comparisons} gives some insight into why this is. In the 140 epoch setting, both the overall F1 score and the overall accuracy is the highest for $t_{flip} = 7$. According to the LNR algorithm \ref{alg:LNR_flip}, a higher $t_{flip}$ means that less labels will be flipped on average. Thus, the highest overall accuracies were achieved when the impact of LNR was minimal. However, the tail accuracy (time signatures 5/4 and 7/4) is the highest when $t_{flip}$ is the lowest, as in when the LNR algorithm is the most active. The test metrics of the baseline model trained for 100 epochs were F1=0.745 and accuracy of 80.71\%, whereas the 140 epoch model using $t_{flip} = 7$ performed better with F1=0.751 and accuracy of 81.37\%.
+After having done a parameter search on the $t_{flip}$ parameter, the confusion matrix on the best setting ($t_{flip} = 7$) can be seen in Figure \ref{figure:time_sig_conf_matrix}. We find that the predicting power of the minority time signatures ($\frac{5}{4}$ and $\frac{7}{4}$) has barely improved. Table \ref{table:time_sig_t_flip_comparisons} gives some insight into why this is. In the 140 epoch setting, both the overall F1 score and the overall accuracy is the highest for $t_{flip} = 7$. According to the LNR algorithm \ref{alg:LNR_flip}, a higher $t_{flip}$ means that less labels will be flipped on average. Thus, the highest overall accuracies were achieved when the impact of LNR was minimal. However, the tail accuracy (time signatures $\frac{5}{4}$ and $\frac{7}{4}$) is the highest when $t_{flip}$ is the lowest, as in when the LNR algorithm is the most active. The test metrics of the baseline model trained for 100 epochs were $F1=0.745$ and accuracy of 80.71\%, whereas the 140 epoch model using $t_{flip} = 7$ performed better with $F1=0.751$ and accuracy of 81.37\%.
 
 % Challenges (mandatory): Challenges you faced when reproducing and/or reimplmenting the paper and conducting the experiments. Were all details in the paper? Or did you have to look in the authors code or contact authors to find about some details (you are encouraged to contact the authors)? Was parts of the code quite hard to get them to work as intended? Did you have to optimize and tune several hyperparameters? Which ones? Did the framework you used make the implementation difficult in some ways?
 \section{Challenges}
@@ -322,7 +337,7 @@ The clearest result that we have been able to replicate from the LNR paper \cite
 
 When applying LNR, it is important to note the impact it might have on overall performance of the model. Even when optimized through parameter search, the overall accuracy isn't guaranteed to outperform other data-level methods. However, if minority classes are of great importance, it might be worth trying out, but not without comparing it to other methods.
 
-A positive correlation between LNR performance and data imbalance ratio was observed in most experiments (ÄNDRA?). This leads us to conclude that the use of LNR is rooted in the need for fairness toward the minority class rather than general accuracy. Detection of minority classes is improved at the cost of overall performance, which might be beneficial in scenarios where minority class detection is critical. Real-world examples include the classification of odd time signatures in music, lesser known musical instruments from various cultures, or even medical diagnoses where few positive cases exist.
+A positive correlation between LNR performance and data imbalance ratio was observed in most experiments. This leads us to conclude that the use of LNR is rooted in the need for fairness toward the minority class rather than general accuracy. Detection of minority classes is improved at the cost of overall performance, which might be beneficial in scenarios where minority class detection is critical. Real-world examples include the classification of odd time signatures in music, lesser known musical instruments from various cultures, or even medical diagnoses where few positive cases exist.
 
 It is important to note that the reproducibility factors of the LNR paper were not unproblematic. The settings and parameters for the KEEL dataset were possible to find in the paper despite them being spread out. However, for CIFAR-10 multiclass parameters, they simply referred to the default parameters in the MiSLAS\cite{mislas_paper} paper. This made it unclear which LNR paramters they had used.
 
@@ -357,7 +372,7 @@ Both a binary classification using KEEL datasets and a multiclass classification
 
 \subsection{Grades D-C-B}
 
-Grade C requires additional empirical experiments to be documented. This was done by tuning the LNR hyperparameter $t_{flip}$ on the Meter2800 dataset, showing its effect on minority class performance. Meters 5/4 and 7/4 are rare in Western music, making their detection challenging. Observing the resulting macro F1-scores and accuracies for different $t_{flip}$ values, we found that a moderate flip threshold of $t_{flip} = 7$ yielded the best overall accuracy, while $t_{flip} = 0$ gave the best accuracy for the minority class.
+Grade C requires additional empirical experiments to be documented. This was done by tuning the LNR hyperparameter $t_{flip}$ on the Meter2800 dataset, showing its effect on minority class performance. Meters $\frac{5}{4}$ and $\frac{7}{4}$ are rare in Western music, making their detection challenging. Observing the resulting macro F1-scores and accuracies for different $t_{flip}$ values, we found that a moderate flip threshold of $t_{flip} = 7$ yielded the best overall accuracy, while $t_{flip} = 0$ gave the best accuracy for the minority class.
 
 % balance between proper minority class detection and performance.
 
@@ -433,5 +448,32 @@ $t_{flip}$ & 0, 1, 2, 3, 4
 \bottomrule
 \end{tabular}
 \end{table}
+
+\begin{table}[H]
+\centering
+\caption{Hyperparameters binary classification on KEEL Datasets}
+\label{tab:hyperparameters}
+\begin{tabular}{lcc}
+\toprule
+Hyperparameter & Value  & Steps\\
+\midrule
+LNR: $t\_flip$ & [0, 4] & 10\\
+LNR: Training epochs of auxiliary MLP & [100, 4000] & 3\\
+SMOTE: $k$ & $[1, \min(20, N_{\min})]$ & 3 \\
+
+SMOTE and CC: Re-balance ratio & [unchanged, 1] & 10\\
+Classifier MLP: Maximum training epochs & 2000\\
+\\
+\textbf{MLP (both classifier and LNR auxiliary model):}  \\
+Hidden layer shape & 5x10x5\\
+Optimizer & Adam\\
+Learning rate & 0.001\\
+
+\bottomrule
+\end{tabular}
+\label{table:keel_hyp}
+\end{table}
+For KEEL binary parameters \ref{table:keel_hyp}: Parameter tuning has been performed where there are square brackets. Tuning was performed with 3 times 4-fold cross validation over the entire dataset, reshuffled between repetitions. Parameters not mentioned have the default settings in scikit-learn or imbalanced-learn.
+
 
 \end{document}
