@@ -13,7 +13,7 @@ Data imbalance is a pervasive issue in machine learning that often hinders class
 This repository contains the implementation and reproduction of the LNR method, applied to:
 1.  **Binary Classification:** Reproduction of results on 4 datasets from the KEEL repository.
 2.  **Multiclass Classification:** Reproduction of results on the CIFAR-10 image dataset.
-3.  **Novel Application:** Application of LNR to the imbalanced music dataset **Meter2800** for time signature detection, specifically aiming to improve the detection of rare, irregular meters (e.g., 5/4, 7/4) using a ResNet18 architecture.
+3.  **Novel Application:** Application of LNR to the imbalanced music dataset **Meter2800** for time signature detection, specifically aiming to improve the detection of rare, irregular meters (e.g., $\frac{5}{4}$, $\frac{7}{4}$) using a ResNet18 architecture.
 
 Our results demonstrate that beneficial label noise yields improved performance for recognizing minority class time signatures, albeit with a trade-off regarding overall accuracy.
 
