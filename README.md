@@ -3,7 +3,7 @@
 # Label Swapping for Imbalanced Music Datasets
 
 <!-- Linked to their profiles -->
-**Authors:** Matei Cananau (@Matdrox), Gustaw Siedlarski (@gustawsi), Alexander Själander (@Soultoo)  
+**Authors:** [Matei Cananau](https://github.com/matdrox), [Gustaw Siedlarski](https://github.com/gustawsi), [Alexander Själander](https://github.com/Soultoo)  
 **Institution:** KTH Royal Institute of Technology
 
 ## Abstract
