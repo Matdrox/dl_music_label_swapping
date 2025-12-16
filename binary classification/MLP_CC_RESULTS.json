@@ -2,6 +2,7 @@
     "mlp_CC_abalone-17_vs_7-8-9-10": {
         "average_precision": 0.13107634304589608,
         "average_recall": 0.7943829608867969,
+
         "average_f1": 0.22275157658762088,
         "std_f1": 0.052122163468516426,
         "average_gmean": 0.8112247845496179,
@@ -12,6 +13,7 @@
     "mlp_CC_ecoli1": {
         "average_precision": 0.6683311052189914,
         "average_recall": 0.8599093389772487,
+
         "average_f1": 0.7469633116964347,
         "std_f1": 0.0649120256178215,
         "average_gmean": 0.865075852773827,
@@ -22,6 +24,7 @@
     "mlp_CC_glass0": {
         "average_precision": 0.5700909300368192,
         "average_recall": 0.7972888383599216,
+
         "average_f1": 0.6582741518994735,
         "std_f1": 0.07267704995209091,
         "average_gmean": 0.7441959645356725,
@@ -32,6 +35,7 @@
     "mlp_CC_vehicle1": {
         "average_precision": 0.5720670232106724,
         "average_recall": 0.7757926095412881,
+        
         "average_f1": 0.6563276534564657,
         "std_f1": 0.04833574192160377,
         "average_gmean": 0.7857889256068539,
